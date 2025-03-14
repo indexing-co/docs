@@ -1,0 +1,29 @@
+---
+title: 'Introduction'
+description: 'The quick and dirty for working with Neighborhoods'
+---
+
+<Note>
+To get a new key, reach out to [hello@indexing.co](mailto:hello@indexing.co) or find us on [Farcaster](https://warpcast.com/runninyeti.eth).
+</Note>
+
+## Overview
+Neighborhoods are distributed clusters of nodes at your service. The primary way to work with them today is via Pipelines.
+
+Each Pipeline consists of:
+1. List of [networks](https://jiti.indexing.co/networks) to subscribe to
+2. Filter (e.g. wallet addresses)
+2. Transformation step (JavaScript)
+3. Destination (Postgres, Webhooks)
+
+## Authentication
+
+All API endpoints are authenticated using an authentication header, `X-API-KEY`.
+
+<Card
+  title="Neighborhood Endpoints"
+  icon="leaf"
+  href="https://github.com/indexing-co/docs/blob/main/api-docs/openapi.json"
+>
+  View the OpenAPI specification file
+</Card>

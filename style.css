@@ -1,0 +1,5 @@
+/* Make logo smaller - equivalent to h-4 (16px) */
+a[href="/"] img {
+  height: 1rem !important;
+  width: auto !important;
+}

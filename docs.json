@@ -1,10 +1,10 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "mint",
   "name": "The Neighborhood",
   "colors": {
-    "primary": "#98F120",
-    "light": "#F6F6F6",
+    "primary": "#111111",
+    "light": "#F0F4EE",
     "dark": "#000000"
   },
   "favicon": "/favicon.png",

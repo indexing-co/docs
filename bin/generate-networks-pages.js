@@ -14,6 +14,10 @@ async function run() {
     tab: "Networks",
     groups: [
       {
+        group: "Overview",
+        pages: ["networks/overview"],
+      },
+      {
         group: "Networks",
         pages: allNetworks.networks.map((n) => `networks/${n.key}`),
       },
@@ -21,8 +25,33 @@ async function run() {
   };
 
   docs.navigation.tabs.push(networksTab);
-
   fs.mkdirSync("networks", { recursive: true });
+
+  fs.writeFileSync(
+    "networks/overview.mdx",
+    `---
+title: 'The Networks'
+description: '${allNetworks.networks.length} supported networks and counting'
+---
+
+Indexing Co supports ${allNetworks.networks.length} networks. _All_ of these are available for real time processing in The Neighborhood.
+
+While the vast majority of these networks are blockchains themselves, we can also support offchain sources such as Farcaster.
+
+The most up to date list can be viewed via an API [here](https://jiti.indexing.co/networks)
+
+<Note>
+Don't see what you need? Reach out!\n
+We can usually onboard any network within 24 hours
+</Note>
+
+## SLAs
+We pass along the uptime guarantees of our RPC providers. This varies by chain, but is generally 99.9% or better. For our internal infrastructure, we maintain a 99.95% uptime.
+
+View more about how we support networks and working with us [here](https://indexing-co.notion.site/Indexing-Co-and-You-15e25f03105380489b3fecdc2f6d8408).
+`,
+  );
+
   for (const n of allNetworks.networks) {
     const previewLink = `https://jiti.indexing.co/networks/${n.key}/${n._status.lastBeat}`;
     const statusLink = `https://jiti.indexing.co/status/${n.key}`;

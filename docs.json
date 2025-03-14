@@ -33,6 +33,12 @@
         "tab": "Networks",
         "groups": [
           {
+            "group": "Overview",
+            "pages": [
+              "networks/overview"
+            ]
+          },
+          {
             "group": "Networks",
             "pages": [
               "networks/abstract",

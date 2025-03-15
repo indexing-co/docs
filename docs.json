@@ -15,16 +15,29 @@
         "groups": [
           {
             "group": "API Docs",
+            "pages": ["api-docs/overview"]
+          },
+          {
+            "group": "Filters",
             "pages": [
-              "api-docs/introduction"
+              "api-docs/endpoint/filters/add",
+              "api-docs/endpoint/filters/list",
+              "api-docs/endpoint/filters/remove"
             ]
           },
           {
-            "group": "Endpoints",
+            "group": "Transformations",
             "pages": [
-              "api-docs/endpoint/get",
-              "api-docs/endpoint/create",
-              "api-docs/endpoint/delete"
+              "api-docs/endpoint/transformations/create",
+              "api-docs/endpoint/transformations/test"
+            ]
+          },
+          {
+            "group": "Pipelines",
+            "pages": [
+              "api-docs/endpoint/pipelines/create",
+              "api-docs/endpoint/pipelines/list",
+              "api-docs/endpoint/pipelines/backfill"
             ]
           }
         ]
@@ -34,9 +47,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "networks/overview"
-            ]
+            "pages": ["networks/overview"]
           },
           {
             "group": "Networks",

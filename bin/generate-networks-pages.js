@@ -25,6 +25,7 @@ async function run() {
   };
 
   docs.navigation.tabs.push(networksTab);
+  fs.rmdirSync("networks", { recursive: true });
   fs.mkdirSync("networks", { recursive: true });
 
   fs.writeFileSync(

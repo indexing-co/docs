@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "OpenAPI Neighborhood",
+    "title": "The Neighborhood - OpenAPI",
     "description": "Schema for testing, deploying, and managing distributed pipelines",
     "license": {
       "name": "MIT"
@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://app.indexing.co"
+      "url": "https://app.indexing.co/dw"
     }
   ],
   "security": [
@@ -19,38 +19,57 @@
     }
   ],
   "paths": {
-    "/plants": {
+    "/filters/{name}": {
       "get": {
-        "description": "Returns all plants from the system that the user has access to",
+        "description": "Returns all values for a given filter, sorted by when they were added (oldest first)",
         "parameters": [
           {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
+            "name": "name",
+            "in": "path",
+            "description": "The name of the filter",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "description": "Optional pagination token for results",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "prefix",
+            "in": "query",
+            "description": "Optional value prefix for results",
+            "example": "0x123",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "List of values",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "required": ["name"],
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "description": "The name of the plant",
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
                         "type": "string"
-                      },
-                      "tag": {
-                        "description": "Tag to specify the type",
-                        "type": "string"
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "nextPageToken": {
+                          "type": "string"
+                        }
                       }
                     }
                   }
@@ -63,14 +82,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["error", "message"],
+                  "required": ["error"],
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "integer",
-                      "format": "int32"
-                    },
-                    "message": {
                       "type": "string"
                     }
                   }
@@ -81,39 +96,21 @@
         }
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "description": "Adds values for a filter",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "description": "Values to add",
           "content": {
             "application/json": {
               "schema": {
-                "allOf": [
-                  {
-                    "required": ["name"],
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "description": "The name of the plant",
-                        "type": "string"
-                      },
-                      "tag": {
-                        "description": "Tag to specify the type",
-                        "type": "string"
-                      }
-                    }
-                  },
-                  {
-                    "required": ["id"],
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "description": "Identification number of the plant",
-                        "type": "integer",
-                        "format": "int64"
-                      }
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
                     }
                   }
-                ]
+                }
               }
             }
           },
@@ -121,19 +118,14 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "success",
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["name"],
+                  "required": ["message"],
                   "type": "object",
                   "properties": {
-                    "name": {
-                      "description": "The name of the plant",
-                      "type": "string"
-                    },
-                    "tag": {
-                      "description": "Tag to specify the type",
+                    "message": {
                       "type": "string"
                     }
                   }
@@ -146,14 +138,66 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["error", "message"],
+                  "required": ["error"],
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "integer",
-                      "format": "int32"
-                    },
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Removes values for a filter",
+        "requestBody": {
+          "description": "Values to remove",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["message"],
+                  "type": "object",
+                  "properties": {
                     "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
                       "type": "string"
                     }
                   }
@@ -164,39 +208,456 @@
         }
       }
     },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
+    "/transformations/test": {
+      "post": {
+        "description": "Test a transformation without committing it",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
+            "name": "network",
+            "in": "query",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
+            }
+          },
+          {
+            "name": "beat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Optional filter name to test against",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filterKeys",
+            "in": "query",
+            "description": "Optional filterKeys to test against. Required if also passing `filter`",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
+        "requestBody": {
+          "description": "Transformation to test",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "examples": ["function transform(block) { ... }"]
+                  }
+                }
+              }
+            },
+            "text/javascript": {
+              "schema": {
+                "type": "string",
+                "examples": ["function transform(block) {\n...\n}\n"]
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
+          "200": {
+            "description": "Response from test",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "unexpected error",
             "content": {
               "application/json": {
                 "schema": {
-                  "required": ["error", "message"],
+                  "required": ["error"],
                   "type": "object",
                   "properties": {
                     "error": {
-                      "type": "integer",
-                      "format": "int32"
-                    },
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transformations/{name}": {
+      "post": {
+        "description": "Update a transformation",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Transformation to save",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "examples": ["function transform(block) { ... }"]
+                  }
+                }
+              }
+            },
+            "text/javascript": {
+              "schema": {
+                "type": "string",
+                "examples": ["function transform(block) {\n...\n}\n"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["message"],
+                  "type": "object",
+                  "properties": {
                     "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipelines": {
+      "get": {
+        "description": "Returns all active pipelines",
+        "responses": {
+          "200": {
+            "description": "List of pipelines",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "required": [
+                          "name",
+                          "transformation",
+                          "filter",
+                          "filterKeys",
+                          "networks",
+                          "delivery"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "transformation": {
+                            "type": "string"
+                          },
+                          "filter": {
+                            "type": "string"
+                          },
+                          "filterKeys": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "networks": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "delivery": {
+                            "type": "object",
+                            "properties": {
+                              "adapter": {
+                                "type": "string"
+                              },
+                              "connection": {
+                                "type": "string"
+                              },
+                              "connectionUri": {
+                                "type": "string"
+                              },
+                              "table": {
+                                "type": "string"
+                              },
+                              "uniqueKeys": {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create or modify a pipeline",
+        "requestBody": {
+          "description": "Pipeline to save",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [
+                  "name",
+                  "transformation",
+                  "filter",
+                  "filterKeys",
+                  "networks",
+                  "delivery"
+                ],
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "transformation": {
+                    "type": "string"
+                  },
+                  "filter": {
+                    "type": "string"
+                  },
+                  "filterKeys": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "networks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "delivery": {
+                    "type": "object",
+                    "properties": {
+                      "adapter": {
+                        "type": "string"
+                      },
+                      "connection": {
+                        "type": "string"
+                      },
+                      "connectionUri": {
+                        "type": "string"
+                      },
+                      "table": {
+                        "type": "string"
+                      },
+                      "uniqueKeys": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["message"],
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipelines/{name}/backfill": {
+      "post": {
+        "description": "Backfill a given pipeline",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Backfill parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "network": {
+                    "type": "string",
+                    "description": "Network to backfill against (required)",
+                    "examples": ["BASE"]
+                  },
+                  "value": {
+                    "type": "string",
+                    "description": "Value to filter the backfill against (required)",
+                    "examples": ["0x123..."]
+                  },
+                  "beatEnd": {
+                    "type": "integer",
+                    "description": "The last beat to check (optional)"
+                  },
+                  "beatStart": {
+                    "type": "integer",
+                    "description": "The first beat to check (optional)"
+                  },
+                  "beats": {
+                    "type": "array",
+                    "description": "A list of beats to explicitly check (optional)",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["message"],
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
                       "type": "string"
                     }
                   }
@@ -217,59 +678,81 @@
       }
     },
     "schemas": {
-      "Plant": {
-        "required": ["name"],
+      "Success": {
+        "required": ["message"],
         "type": "object",
         "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
+          "message": {
             "type": "string"
           }
         }
       },
-      "NewPlant": {
-        "allOf": [
-          {
-            "required": ["name"],
-            "type": "object",
-            "properties": {
-              "name": {
-                "description": "The name of the plant",
-                "type": "string"
-              },
-              "tag": {
-                "description": "Tag to specify the type",
-                "type": "string"
-              }
-            }
-          },
-          {
-            "required": ["id"],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
       "Error": {
-        "required": ["error", "message"],
+        "required": ["error"],
         "type": "object",
         "properties": {
           "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
             "type": "string"
+          }
+        }
+      },
+      "Pipeline": {
+        "required": [
+          "name",
+          "transformation",
+          "filter",
+          "filterKeys",
+          "networks",
+          "delivery"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "transformation": {
+            "type": "string"
+          },
+          "filter": {
+            "type": "string"
+          },
+          "filterKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "networks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "delivery": {
+            "type": "object",
+            "properties": {
+              "adapter": {
+                "type": "string"
+              },
+              "connection": {
+                "type": "string"
+              },
+              "connectionUri": {
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              },
+              "uniqueKeys": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }

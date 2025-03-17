@@ -1,0 +1,66 @@
+---
+title: Overview
+description: Or, how to control the firehose
+---
+
+Filters can come in many forms, but there are a couple primary use cases: wallet and contract addresses.
+
+Filters also work _twice_ per pipeline:
+
+1. They are applied for each network beat to determine if a beat should even be processed.
+2. After processing, the resulting records are filtered again using the pipeline's `filterKeys`.
+
+# Example
+
+Let's say we want to filter `vitalik.eth`'s token transfers.
+
+We'd first [add a filter](/api-docs/endpoint/filters/add) for his address, `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`.
+
+From there, we could test the following transformation against an Ethereum block containing a token transfer (e.g. block 22062886 with [this tx](0x793e3bb9b8010aba03354383e8101641ed384799be444eaa980dab75cd80e5aa)):
+
+```javascript
+// vitalik-example.js
+function vitalikTokenTransfers(block) {
+  const erc20Transfers = [];
+
+  for (const tx of block.transactions) {
+    for (const log of tx.receipt?.logs) {
+      const decoded = utils.evmDecodeLog(log, [
+        'event Transfer(address indexed from, address indexed to, uint256 value)',
+      ]);
+
+      if (decoded) {
+        erc20Transfers.push({
+          transaction_hash: tx.hash,
+          log_index: log.logIndex,
+          contract_address: log.address.toLowerCase(),
+          from: decoded.from,
+          to: decoded.to,
+        });
+      }
+    }
+  }
+
+  return erc20Transfers;
+}
+```
+
+NOTE: the above transformation does _not_ have its own filter step. Instead, we can specify during [testing](/api-docs/endpoint/transformations/test) and in the [pipeline](/api-docs/endpoint/pipelines/create) to filter by `from`, `to`, or both.
+
+```bash
+curl "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22062886&filter=vitalik&filterKeys\[0\]=to" -H 'x-api-key: <API KEY>' -F code=@./vitalik-example.js | jq
+```
+
+^ this will provide a filtered set of token transfers like this:
+
+```json
+[
+  {
+    "transaction_hash": "0x9515ed82d894cdaf6d6a6b5952f8438cdaad948e17c9d842deb5c3f311207bc6",
+    "log_index": 2,
+    "contract_address": "0x7e1fb1be92693ec1da42ee8dfc072990bf3a3000",
+    "from": "0x0000000000000000000000000000000000000000",
+    "to": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
+  }
+]
+```

@@ -15,11 +15,14 @@
         "groups": [
           {
             "group": "API Docs",
-            "pages": ["api-docs/overview"]
+            "pages": [
+              "api-docs/overview"
+            ]
           },
           {
             "group": "Filters",
             "pages": [
+              "api-docs/endpoint/filters/overview",
               "api-docs/endpoint/filters/add",
               "api-docs/endpoint/filters/list",
               "api-docs/endpoint/filters/remove"
@@ -28,6 +31,7 @@
           {
             "group": "Transformations",
             "pages": [
+              "api-docs/endpoint/transformations/overview",
               "api-docs/endpoint/transformations/create",
               "api-docs/endpoint/transformations/test"
             ]
@@ -47,7 +51,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",

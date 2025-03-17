@@ -46,7 +46,7 @@ Don't see what you need? Reach out!\n
 We can usually onboard any network within 24 hours
 </Note>
 
-## SLAs
+# SLAs
 We pass along the uptime guarantees of our RPC providers. This varies by chain, but is generally 99.9% or better. For our internal infrastructure, we maintain a 99.95% uptime.
 
 View more about how we support networks and working with us [here](https://indexing-co.notion.site/Indexing-Co-and-You-15e25f03105380489b3fecdc2f6d8408).
@@ -62,14 +62,14 @@ title: '${n.name}'
 description: 'Real time indexing for ${n.name}; delivered to you'
 ---
 
-## Overview
+# Overview
 - Network Key: \`${n.key}\`
 - Estimated beat time: ${n._metadata.estimatedBeatTimeMS} ms
 
-## Preview
+# Preview
 Click the following link to view a preview of the raw data available: [${previewLink}](${previewLink})
 
-## Status
+# Status
 Click here to view the latest status: [${statusLink}](${statusLink})
 `;
 

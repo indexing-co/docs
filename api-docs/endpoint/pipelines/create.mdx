@@ -3,3 +3,50 @@ title: Create
 description: Create or update a distributed pipeline
 openapi: POST /pipelines
 ---
+
+# Destinations
+
+There are currently two flavors of destinations available via self-service APIs: Webhooks and Postgres.
+
+There are [15 total that are currently supported by Indexing Co](https://indexing-co.notion.site/16e25f031053805da10cf65179f977c6?v=097aa09c71c845db9f88d773385d1f5e) generally though - reach out if you need something else!
+
+## Webhooks
+
+Here's an example payload for creating a pipeline that delivers to a webhook:
+
+```json
+{
+  ...
+  "delivery": {
+    "adapter": "HTTP",
+    "connection": {
+      "host": "https://webhook.site/...",
+      "headers": {
+        "some-auth-key":"some-auth-key"
+      }
+    }
+  },
+  ...
+}
+```
+
+## Postgres
+
+Here's an example payload for creating a pipeline that delivers to a Postgres database:
+
+```json
+{
+  ...
+  "delivery": {
+    "adapter": "POSTGRES",
+    "connectionUri": "postgres://...",
+    "table": "vitalik_token_transfers",
+    "uniqueKeys": ["transaction_hash", "log_index"]
+  },
+  ...
+}
+```
+
+<Note>
+  Make sure your database table is already setup! Importantly, this also includes ensuring that there's a unique / primary key index on the table matching the provided `uniqueKeys` in the pipeline.
+</Note>

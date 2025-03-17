@@ -1,0 +1,79 @@
+---
+title: Overview
+description: Making the data work for _you_
+---
+
+In The Neighborhood, our goal is to meet the data where it's at (in its raw form) and you wherever you might find yourself (with a db, webhook, etc).
+
+Transformations are how we bridge that gap. These are simple (or complex) JavaScript functions that run throughout the distributed network. We call this Just In Time Indexing.
+
+Here's a simple example. This function simply takes in a new EVM block and returns its `number` and an ISO formatted `timestamp`.
+
+```javascript
+function allEVMBlocks(block) {
+  return {
+    number: block.number,
+    timestamp: new Date(block.timestamp * 1000).toISOString(),
+  };
+}
+```
+
+Here's a more complex example counting the number of times each Solana account is found in a block:
+
+```javascript
+function solanaAccountCount(block) {
+  const accountCounts = {};
+
+  for (const tx of block.transactions) {
+    if (tx.meta.err) continue;
+
+    const allAccounts = tx.transaction.message.accountKeys
+      .concat(tx.meta.loadedAddresses.writable)
+      .concat(tx.meta.loadedAddresses.readonly);
+
+    for (const acc of allAccounts) {
+      if (!accountCounts[acc]) {
+        accountCounts[acc] = 0;
+      }
+    }
+
+    const allInstructions = tx.transaction.message.instructions.concat(
+      tx.meta.innerInstructions.map((ii) => ii.instructions).flat()
+    );
+    for (const inst of allInstructions) {
+      for (const accIdx of inst.accounts) {
+        accountCounts[allAccounts[accIdx]] += 1;
+      }
+    }
+  }
+
+  return Object.entries(accountCounts).map(([account, count]) => ({ account, count }));
+}
+```
+
+# Helper Functions
+
+To aid in transformations, we've begun open sourcing common utility functions and templates. You can view all of this on [GitHub](https://github.com/indexing-co/jiti) and as an [npm package](https://www.npmjs.com/package/@indexing/jiti).
+<Note>
+Pull requests are welcome! We need the community's help for bugs, new templates, and commonly used utilities.
+</Note>
+
+Here's a list of the available functions as they can be used within transformations:
+
+- `templates.token_transfers(block)`: pass in an entire block (EVM or not) and get back all of the token transfers within it
+- `utils.evmAddressToChecksum(address)`: convert an EVM address to its checksum form
+- `utils.evmChainToId(chain)`: convert an EVM chain name to a `chainId`; try `block._network` to get the current chain name
+- `utils.evmDecodeLog(log, signatures[])`: try decoding an EVM log against a list of event signatures
+- `utils.evmDecodeLogWithMetadata(log, signatures[])`: same as `evmDecodeLog`, but also return the name of the matching event
+- `utils.evmMethodSignatureToHex(signature)`: convert an EVM event signature (e.g. from an ABI) to its topic0, hexadecimal form
+
+# Available Packages
+
+Although transformations are run in a sandboxed environment, we inject a select few npm packages that can also be used. These include:
+
+- Buffer (from stdlib)
+- gzipSync (from zlib)
+- [BigNumber](https://www.npmjs.com/package/bignumber.js)
+- [borsh](https://www.npmjs.com/package/@coral-xyz/borsh)
+- [bs58](https://www.npmjs.com/package/bs58)
+- [viem](https://www.npmjs.com/package/viem)

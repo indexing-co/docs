@@ -11,38 +11,40 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "API Docs",
+        "tab": "APIs",
         "groups": [
           {
-            "group": "API Docs",
-            "pages": [
-              "api-docs/overview"
-            ]
+            "group": "APIs",
+            "pages": ["apis/overview"]
           },
           {
             "group": "Filters",
             "pages": [
-              "api-docs/endpoint/filters/overview",
-              "api-docs/endpoint/filters/add",
-              "api-docs/endpoint/filters/list",
-              "api-docs/endpoint/filters/remove"
+              "apis/filters/overview",
+              "apis/filters/add",
+              "apis/filters/list",
+              "apis/filters/remove"
             ]
           },
           {
             "group": "Transformations",
             "pages": [
-              "api-docs/endpoint/transformations/overview",
-              "api-docs/endpoint/transformations/create",
-              "api-docs/endpoint/transformations/test"
+              "apis/transformations/overview",
+              "apis/transformations/create",
+              "apis/transformations/test"
             ]
           },
           {
             "group": "Pipelines",
             "pages": [
-              "api-docs/endpoint/pipelines/create",
-              "api-docs/endpoint/pipelines/list",
-              "api-docs/endpoint/pipelines/backfill"
+              "apis/pipelines/create",
+              "apis/pipelines/list",
+              "apis/pipelines/backfill"
             ]
+          },
+          {
+            "group": "Examples",
+            "pages": ["apis/examples/uniswap"]
           }
         ]
       },
@@ -51,9 +53,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "networks/overview"
-            ]
+            "pages": ["networks/overview"]
           },
           {
             "group": "Networks",

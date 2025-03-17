@@ -1,0 +1,120 @@
+---
+title: Uniswap swaps across EVM
+---
+
+# 1. Create a transformation
+
+For this use case, we're going to track Uniswap v2, v3, and v4 swap events. Notably, this will also pick up any protocols that have forked from Uniswap.
+
+Here's a transformation function to pull out all of those events from an EVM block:
+
+```javascript
+function blockSwaps(block) {
+  const swaps = [];
+
+  for (const tx of block.transactions || []) {
+    for (const log of tx.receipt?.logs || []) {
+      const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
+        'event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)', // V2
+        'event Swap(address sender, address recipient, int256 amount0, int256 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick)', // V3
+        'event Swap(PoolId indexed id, address indexed sender, int128 amount0, int128 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick, uint24 fee)',
+      ]);
+
+      if (decodedWithMetadata) {
+        swaps.push({
+          chain: block._network,
+	        transaction_hash: tx.hash,
+	        log_index: log.logIndexin,
+	        pool_address: log.address?.toLowerCase(),
+	        decoded: decodedWithMetadata.decoded,
+	      });
+      }
+    }
+  }
+
+	return swaps;
+}
+```
+
+If we save the above code as `swaps.js`, then we can leverage it to test against any EVM network + block using the [test](/apis/transformations/test) endpoint. Here's how we could do it as a CURL request:
+
+```bash
+curl "https://app.indexing.co/dw/transformations/test?network=base&beat=25000000" \
+	-H "X-API-KEY: <API_KEY>" \
+	-F code=@./swaps.js \
+	| jq
+```
+
+Once we're happy with the results, we can commit the transformation using the [create](/apis/transformations/create) endponit like this:
+
+```bash
+curl "https://app.indexing.co/dw/transformations/block_swaps" \
+	-H "X-API-KEY: <API_KEY>" \
+	-d code=@./swaps.js \
+	| jq
+```
+
+# 2. Deploy the pipeline
+
+The second, and final step, is simply deploying the pipeline! Use an existing webhook or head over to [webhook.site](https://webhook.site/) to get a temporary one.
+
+You can [create](/apis/pipelines/create) the pipeline with the following payload:
+
+```json
+{
+	"name": "block_swaps",
+	"transformation": "block_swaps",
+	"networks": ["base"],
+	"delivery": {
+		"adapter": "HTTP",
+		"connection": {
+			"host": "<WEBHOOK ENDPOINT>"
+		}
+	}
+}
+```
+
+And as a CURL request:
+
+```bash
+curl https://app.indexing.co/dw/pipelines \
+	-H "Content-Type: application/json" \
+	-H "X-API-KEY: <API KEY>" \
+	-d '{
+		"name": "block_swaps",
+		"transformation": "block_swaps",
+		"networks": ["base"],
+		"delivery": {
+			"adapter": "HTTP",
+			"connection": {
+				"host": "<WEBHOOK ENDPOINT>"
+			}
+		}
+	}' \
+	| jq
+```
+
+<Note>
+    You can add any of the supported [networks](/networks) to the pipeline during creation - the more the merrier!
+</Note>
+
+It should only take a few seconds to begin seeing data flow. Once you're done expirementing, make sure to disable the pipeline with `enabled: false`:
+
+```bash
+curl https://app.indexing.co/dw/pipelines \
+	-H "Content-Type: application/json" \
+	-H "X-API-KEY: <API KEY>" \
+	-d '{
+    "enabled": false,
+		"name": "block_swaps",
+		"transformation": "block_swaps",
+		"networks": ["base"],
+		"delivery": {
+			"adapter": "HTTP",
+			"connection": {
+				"host": "<WEBHOOK ENDPOINT>"
+			}
+		}
+	}' \
+	| jq
+```

@@ -36,7 +36,7 @@ function blockSwaps(block) {
 }
 ```
 
-If we save the above code as `swaps.js`, then we can leverage it to test against any EVM network + block using the [test](/apis/transformations/test) endpoint. Here's how we could do it as a CURL request:
+If we save the above code as `swaps.js`, then we can leverage it to test against any EVM network + block using the [test](/guide/transformations/test) endpoint. Here's how we could do it as a CURL request:
 
 ```bash
 curl "https://app.indexing.co/dw/transformations/test?network=base&beat=25000000" \
@@ -45,7 +45,7 @@ curl "https://app.indexing.co/dw/transformations/test?network=base&beat=25000000
 	| jq
 ```
 
-Once we're happy with the results, we can commit the transformation using the [create](/apis/transformations/create) endponit like this:
+Once we're happy with the results, we can commit the transformation using the [create](/guide/transformations/create) endponit like this:
 
 ```bash
 curl "https://app.indexing.co/dw/transformations/block_swaps" \
@@ -58,7 +58,7 @@ curl "https://app.indexing.co/dw/transformations/block_swaps" \
 
 The second, and final step, is simply deploying the pipeline! Use an existing webhook or head over to [webhook.site](https://webhook.site/) to get a temporary one.
 
-You can [create](/apis/pipelines/create) the pipeline with the following payload:
+You can [create](/guide/pipelines/create) the pipeline with the following payload:
 
 ```json
 {

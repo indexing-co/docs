@@ -1,22 +1,24 @@
 ---
 title: Overview
-description: The quick start for working with Neighborhoods
+description: Welcome to The Neighborhood
 ---
 
 <Warning>
-These docs are a work in progress!
-We'll be rapidly updating them in coming days to add more guides and clearer descriptions.
-Reach out any time for questions 🐇
+These docs are a work in progress! Reach out any time for questions 🐇
 </Warning>
 
 # Overview
-Neighborhoods are distributed clusters of nodes at your service. The primary way to work with them today is via pipelines.
+The Neighborhood is the quickest way to get transformed, onchain data.
+
+We meet the data where it's at (in its raw form) and you, our neighbor, where you're at with your existing infra (e.g. database or webhook). This gap is bridged with distributed clusters of nodes we call Neighborhoods.
+
+Today, the primary way to leverage The Neighborhood is with pipelines.
 
 <Note>
     Pipelines _push_ data to you. Instead of having to integrate with someone's subgraph or API schema, you simply get to define how the data is processed and where you'd like to receive. Data on demand, just the way you want it.
 </Note>
 
-Each pipeline consists of:
+Each pipeline consists of a:
 1. List of [networks](/networks) to subscribe to
 2. Filter (e.g. wallet addresses)
 2. Transformation step (JavaScript)
@@ -36,7 +38,7 @@ To get a new key, reach out to [hello@indexing.co](mailto:hello@indexing.co) or 
 <Card
   title="Neighborhood Endpoints"
   icon="leaf"
-  href="https://github.com/indexing-co/docs/blob/main/apis/openapi.json"
+  href="https://github.com/indexing-co/docs/blob/main/guide/openapi.json"
 >
   View the OpenAPI specification file
 </Card>

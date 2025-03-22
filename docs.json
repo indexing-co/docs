@@ -11,42 +11,42 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "APIs",
+        "tab": "Guide",
         "groups": [
           {
-            "group": "APIs",
-            "pages": ["apis/overview"]
+            "group": "Introduction",
+            "pages": ["guide/overview"]
           },
           {
-            "group": "Filters",
+            "group": "Defining Filters",
             "pages": [
-              "apis/filters/overview",
-              "apis/filters/add",
-              "apis/filters/list",
-              "apis/filters/remove"
+              "guide/filters/overview",
+              "guide/filters/add",
+              "guide/filters/list",
+              "guide/filters/remove"
             ]
           },
           {
-            "group": "Transformations",
+            "group": "Applying Transformations",
             "pages": [
-              "apis/transformations/overview",
-              "apis/transformations/create",
-              "apis/transformations/test"
+              "guide/transformations/overview",
+              "guide/transformations/create",
+              "guide/transformations/test"
             ]
           },
           {
-            "group": "Pipelines",
+            "group": "Deploying Pipelines",
             "pages": [
-              "apis/pipelines/create",
-              "apis/pipelines/list",
-              "apis/pipelines/backfill"
+              "guide/pipelines/create",
+              "guide/pipelines/list",
+              "guide/pipelines/backfill"
             ]
-          },
-          {
-            "group": "Examples",
-            "pages": ["apis/examples/uniswap"]
           }
         ]
+      },
+      {
+        "tab": "Examples",
+        "pages": ["examples/uniswap"]
       },
       {
         "tab": "Networks",
@@ -180,23 +180,7 @@
       }
     ],
     "global": {
-      "anchors": [
-        {
-          "anchor": "Indexing Co",
-          "href": "https://www.indexing.co",
-          "icon": "house"
-        },
-        {
-          "anchor": "Farcaster",
-          "href": "https://warpcast.com/~/channel/indexing",
-          "icon": "archway"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://theindexingcompany.substack.com",
-          "icon": "newspaper"
-        }
-      ]
+      "anchors": []
     }
   },
   "logo": {

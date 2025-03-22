@@ -97,6 +97,17 @@
       },
       "post": {
         "description": "Adds values for a filter",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the filter",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "Values to add",
           "content": {
@@ -153,6 +164,17 @@
       },
       "delete": {
         "description": "Removes values for a filter",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the filter",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "Values to remove",
           "content": {

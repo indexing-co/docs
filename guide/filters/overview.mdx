@@ -14,7 +14,7 @@ Filters also work _twice_ per pipeline:
 
 Let's say we want to filter `vitalik.eth`'s token transfers.
 
-We'd first [add a filter](/apis/filters/add) for his address, `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`.
+We'd first [add a filter](/guide/filters/add) for his address, `0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045`.
 
 From there, we could test the following transformation against an Ethereum block containing a token transfer (e.g. block 22062886 with [this tx](0x793e3bb9b8010aba03354383e8101641ed384799be444eaa980dab75cd80e5aa)):
 
@@ -45,7 +45,7 @@ function vitalikTokenTransfers(block) {
 }
 ```
 
-NOTE: the above transformation does _not_ have its own filter step. Instead, we can specify during [testing](/apis/transformations/test) and in the [pipeline](/apis/pipelines/create) to filter by `from`, `to`, or both.
+NOTE: the above transformation does _not_ have its own filter step. Instead, we can specify during [testing](/guide/transformations/test) and in the [pipeline](/guide/pipelines/create) to filter by `from`, `to`, or both.
 
 ```bash
 curl "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22062886&filter=vitalik&filterKeys\[0\]=to" -H 'x-api-key: <API KEY>' -F code=@./vitalik-example.js | jq

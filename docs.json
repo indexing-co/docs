@@ -193,12 +193,7 @@
         "label": "Support",
         "href": "mailto:hello@indexing.co"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://try.indexing.co"
-    }
+    ]
   },
   "footer": {
     "socials": {

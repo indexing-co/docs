@@ -1,5 +1,5 @@
 ---
-title: Uniswap swaps across EVM
+title: "Uniswap swaps across EVM"
 ---
 
 # 1. Create a transformation
@@ -36,7 +36,7 @@ function blockSwaps(block) {
 }
 ```
 
-If we save the above code as `swaps.js`, then we can leverage it to test against any EVM network + block using the [test](/guide/transformations/test) endpoint. Here's how we could do it as a CURL request:
+If we save the above code as `swaps.js`, then we can leverage it to test against any EVM network \+ block using the [test](/guide/transformations/test) endpoint. Here's how we could do it as a CURL request:
 
 ```bash
 curl "https://app.indexing.co/dw/transformations/test?network=base&beat=25000000" \
@@ -45,7 +45,7 @@ curl "https://app.indexing.co/dw/transformations/test?network=base&beat=25000000
 	| jq
 ```
 
-Once we're happy with the results, we can commit the transformation using the [create](/guide/transformations/create) endponit like this:
+Once we're happy with the results, we can commit the transformation using the [create](/guide/transformations/create) endpoint like this:
 
 ```bash
 curl "https://app.indexing.co/dw/transformations/block_swaps" \
@@ -56,7 +56,7 @@ curl "https://app.indexing.co/dw/transformations/block_swaps" \
 
 # 2. Deploy the pipeline
 
-The second, and final step, is simply deploying the pipeline! Use an existing webhook or head over to [webhook.site](https://webhook.site/) to get a temporary one.
+The second, and final step, is simply deploying the pipeline\! Use an existing webhook or head over to [webhook.site](https://webhook.site/) to get a temporary one.
 
 You can [create](/guide/pipelines/create) the pipeline with the following payload:
 
@@ -95,7 +95,7 @@ curl https://app.indexing.co/dw/pipelines \
 ```
 
 <Note>
-    You can add any of the supported [networks](/networks) to the pipeline during creation - the more the merrier!
+  You can add any of the supported [networks](/networks) to the pipeline during creation - the more the merrier\!
 </Note>
 
 It should only take a few seconds to begin seeing data flow. Once you're done expirementing, make sure to disable the pipeline with `enabled: false`:

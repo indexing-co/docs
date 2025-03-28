@@ -15,7 +15,9 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview"]
+            "pages": [
+              "guide/overview"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -46,14 +48,18 @@
       },
       {
         "tab": "Examples",
-        "pages": ["examples/uniswap"]
+        "pages": [
+          "examples/uniswap"
+        ]
       },
       {
         "tab": "Networks",
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -99,6 +105,7 @@
               "networks/fantom_testnet",
               "networks/farcaster",
               "networks/filecoin",
+              "networks/filecoin_evm",
               "networks/flow",
               "networks/fraxtal",
               "networks/fuel",
@@ -123,6 +130,7 @@
               "networks/metis",
               "networks/mode",
               "networks/mode_sepolia",
+              "networks/monad_testnet",
               "networks/moonbeam",
               "networks/moonriver",
               "networks/movement_bardock",

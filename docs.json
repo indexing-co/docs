@@ -127,6 +127,7 @@
               "networks/linea_sepolia",
               "networks/lyra",
               "networks/mantle",
+              "networks/megaeth_testnet",
               "networks/metis",
               "networks/mode",
               "networks/mode_sepolia",

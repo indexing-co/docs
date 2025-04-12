@@ -15,7 +15,7 @@ function blockSwaps(block) {
   for (const tx of block.transactions || []) {
     for (const log of tx.receipt?.logs || []) {
       const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
-        'event Swap(address indexed sender, uint amount0In, uint amount1In, uint amount0Out, uint amount1Out, address indexed to)', // V2
+        'event Swap(address indexed sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, address indexed to)', // V2
         'event Swap(address sender, address recipient, int256 amount0, int256 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick)', // V3
         'event Swap(PoolId indexed id, address indexed sender, int128 amount0, int128 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick, uint24 fee)',
       ]);

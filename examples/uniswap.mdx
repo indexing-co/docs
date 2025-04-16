@@ -24,7 +24,7 @@ function blockSwaps(block) {
         swaps.push({
           chain: block._network,
 	        transaction_hash: tx.hash,
-	        log_index: log.logIndexin,
+	        log_index: log.logIndex,
 	        pool_address: log.address?.toLowerCase(),
 	        decoded: decodedWithMetadata.decoded,
 	      });

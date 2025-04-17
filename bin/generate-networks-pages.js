@@ -74,7 +74,7 @@ Click the following link to view a preview of the raw data available: [${preview
 Click here to view the latest status: [${statusLink}](${statusLink})
 `;
 
-    fs.writeFileSync(`networks/${n.key}.mdx`, content);
+    fs.writeFileSync(`networks/${n.key.toLowerCase()}.mdx`, content);
   }
 
   fs.writeFileSync("docs.json", JSON.stringify(docs, null, 2));

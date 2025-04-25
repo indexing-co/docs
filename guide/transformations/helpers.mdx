@@ -1,0 +1,31 @@
+---
+title: Helpers
+description: Functions and packages for transformations.
+---
+
+# Functions
+
+To aid in transformations, we've begun open sourcing common utility functions and templates. You can view all of this on [GitHub](https://github.com/indexing-co/jiti) and as an [npm package](https://www.npmjs.com/package/@indexing/jiti).
+<Note>
+Pull requests are welcome! We need the community's help for bugs, new templates, and commonly used utilities.
+</Note>
+
+Here's a list of the available functions as they can be used within transformations:
+
+- `templates.token_transfers(block)`: pass in an entire block (EVM or not) and get back all of the token transfers within it
+- `utils.evmAddressToChecksum(address)`: convert an EVM address to its checksum form
+- `utils.evmChainToId(chain)`: convert an EVM chain name to a `chainId`; try `block._network` to get the current chain name
+- `utils.evmDecodeLog(log, signatures[])`: try decoding an EVM log against a list of event signatures
+- `utils.evmDecodeLogWithMetadata(log, signatures[])`: same as `evmDecodeLog`, but also return the name of the matching event
+- `utils.evmMethodSignatureToHex(signature)`: convert an EVM event signature (e.g. from an ABI) to its topic0, hexadecimal form
+
+# Available Packages
+
+Although transformations are run in a sandboxed environment, we inject a select few npm packages that can also be used. These include:
+
+- Buffer (from stdlib)
+- gzipSync (from zlib)
+- [BigNumber](https://www.npmjs.com/package/bignumber.js)
+- [borsh](https://www.npmjs.com/package/@coral-xyz/borsh)
+- [bs58](https://www.npmjs.com/package/bs58)
+- [viem](https://www.npmjs.com/package/viem)

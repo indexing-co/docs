@@ -1,0 +1,182 @@
+---
+title: Data from Chain to Database (Aave Example) — Part 2
+---
+
+In [Part 1](/examples/aave_pt1), we set up a contract filter for the Aave Pool, wrote transformation logic to extract onchain events, and registered it for use in a pipeline. In this second and final part, we’ll walk through deploying the full pipeline and streaming your data into a database or webhook endpoint.
+
+We'll be using **Postman** again, but only for the final pipeline deployment step. The rest of the setup will be done using CLI tools or through your preferred database and development environment.
+
+Here’s what we’ll cover:
+
+1. Set up a database
+2. Create a schema based on transformation output
+3. Deploy the pipeline with destination credentials
+4. Confirm data is flowing
+
+---
+
+### Step 4a: Set up a database or webhook
+
+Before deploying the pipeline, you need to define a destination where data will be streamed.
+
+In this guide, we’ll use **PostgreSQL** as our example target. However, The Indexing Company supports many output adapters, organized into categories:
+
+- **Databases & Warehouses** — PostgreSQL (example), MySQL, SQLite, BigQuery, Firestore, MongoDB, Neo4j, Arango
+- **Event Streams & Queues** — Kafka, Kinesis, Pulsar, GCP PubSub
+- **Cloud Storage & APIs** — AWS S3, GCP Cloud Storage (GCS), HTTP / Webhook
+
+➡️ You can find the full list of supported destinations [in our adapter directory](https://www.notion.so/16e25f031053805da10cf65179f977c6?pvs=21).
+
+Need support for a destination you don’t see listed? We can add custom adapters — just reach out to us at [**hello@indexing.co**](mailto:hello@indexing.co).
+
+### PostgreSQL Setup
+
+To follow along with this example:
+
+- Spin up a Postgres instance (local or hosted)
+- Create a table or database for the data
+- Make sure it’s accessible (e.g., by IP allowlisting The Indexing Company)
+
+Next, we’ll define the schema based on the output of your transformation function.
+
+---
+
+### Step 5: Generate a schema from transformation output
+
+Before deploying your pipeline, you need to define a table schema that aligns with the output of your transformation code.
+
+The fastest way to do this is by taking the test output from [Part 1, Step 3](/examples/aave_pt1), and using that JSON object to generate a PostgreSQL schema.
+
+Here’s a sample output from the transformation:
+
+```json
+{
+  "chain": "ETHEREUM",
+  "block": 22282149,
+  "transaction_hash": "0xc0814c035946d6889497a82d6515647f939f1dfe5d86d46c4294b3c6b127bad7",
+  "log_index": 534,
+  "contract_address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+  "decoded": {
+    "reserve": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+    "onBehalfOf": "0x3f3B17da678a495EbEc8a061657Cb6CFa4901531",
+    "referralCode": 0,
+    "user": "0x3f3B17da678a495EbEc8a061657Cb6CFa4901531",
+    "amount": "15000000000000000000000"
+  },
+  "event_name": "Supply"
+}
+
+```
+
+If you're creating a table from scratch, you can do it with a single SQL command. Here's the schema fit for the current pipeline.
+
+```sql
+CREATE TABLE AavePool (
+    chain TEXT NOT NULL,
+    block BIGINT NOT NULL,
+    transaction_hash TEXT NOT NULL,
+    log_index INTEGER NOT NULL,
+    contract_address TEXT NOT NULL,
+    decoded JSONB NOT NULL,
+    event_name TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    PRIMARY KEY (chain, transaction_hash, log_index)
+);
+
+```
+
+This setup avoids using generated IDs for deterministic data — a common trap. Instead, it uses a unique combination of `chain`, `transaction_hash`, and `log_index` as the primary key.
+
+Because The Indexing Company’s pipelines guarantee **at-least-once delivery**, duplicates can occur during retries. The unique key constraint ensures that only one version of each event is stored reliably.
+
+Make sure the schema matches the structure and types you expect to receive at scale. Once ready, you're good to move on to deployment.
+
+💡 You can use tools like ChatGPT or `jsonschema2ddl` to help generate your table schema from a JSON example like the one above. Here’s a [quick tutorial including the prompts](/examples/pipeline_to_postgres).
+
+---
+
+### Step 6: Deploy the pipeline
+
+**Postman Command Name**: `6. Deploy Pipeline`
+
+With the transformation logic, contract filter, and destination schema ready, you can now deploy the full pipeline. This step registers all components together so The Indexing Company can begin streaming data from the blockchain to your destination.
+
+You’ll need to provide:
+
+- The transformation ID (`aave_example` if following [Part 1](/examples/aave_pt1))
+- The filter name (`aave_example_filter`) and filterKeys. The FilterKey is the parameter to filter on. In our case the `contract_address`
+- The `networks` in this case `ethereum` , but feel free to add other chains if the event signatures and contracts filters apply on those too, like `base`
+- The destination type (e.g. `postgres`, `webhook`, etc.)
+- Destination connection credentials (e.g. database URI or webhook URL)
+
+Here’s an example `curl` to deploy a pipeline to PostgreSQL:
+
+```bash
+curl --location 'https://app.indexing.co/dw/pipelines/' \
+--header 'X-API-KEY: YOUR_API_KEY' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "name": "aave_example_pipeline",
+    "transformation": "aave_example",
+    "filter": "aave_example_filter",
+    "filterKeys": [
+        "contract_address"
+    ],
+    "networks": [
+        "ethereum"
+    ],
+    "enabled": true,
+    "delivery": {
+        "adapter": "POSTGRES",
+        "connectionUri": "postgresql://user:password@host:5432/database",
+        "table": "aavepool",
+        "uniqueKeys": [
+            "chain", "transaction_hash", "log_index"
+        ]
+    }
+}'
+```
+
+In Postman:
+
+- Set the request type to **POST**
+- Use the URL: `https://app.indexing.co/dw/pipelines/`
+- Go to **Body > raw > JSON** and paste in the payload above
+
+Once submitted, The Neighborhood will begin streaming data for every new block that matches your filter and passes your transformation.
+
+---
+
+### Step 7: Confirm data is flowing
+
+Once your pipeline is live, it's time to verify that your data is arriving.
+
+For PostgreSQL:
+
+- Connect to your database
+- Run a simple query like:
+
+```
+SELECT * FROM AavePool ORDER BY block DESC LIMIT 10;
+```
+
+You should see a stream of new rows appearing in real time as new blocks and events are indexed.
+
+If you don’t see data:
+
+- Double-check your filter, transformation, and table name
+- Make sure your database is accessible and credentials are correct
+- Review logs (if available) or reach out for help
+
+---
+
+## That’s a wrap!
+
+You’ve now built and deployed a full onchain data pipeline to **The Neighborhood**, the distributed indexing network by The Indexing Company — from contract filtering to transformation, schema generation, and live delivery.
+
+If you have any questions, need help configuring a destination, or want to request a new adapter:
+
+- Reach out at [indexing.co/get-in-touch](https://www.indexing.co/get-in-touch)
+- Or email us at [**hello@indexing.co**](mailto:hello@indexing.co)
+
+We’d love to hear what you’re building!

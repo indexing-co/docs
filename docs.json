@@ -15,7 +15,9 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview"]
+            "pages": [
+              "guide/overview"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -47,14 +49,22 @@
       },
       {
         "tab": "Examples",
-        "pages": ["examples/uniswap"]
+        "pages": [
+          "examples/uniswap",
+          "examples/aave_pt1",
+          "examples/aave_pt2",
+          "examples/evm_event_sigs",
+          "examples/pipeline_to_postgres"
+        ]
       },
       {
         "tab": "Networks",
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -117,8 +127,6 @@
               "networks/injective",
               "networks/injective_testnet",
               "networks/ink",
-              "networks/karura",
-              "networks/karura_testnet",
               "networks/kusama",
               "networks/linea",
               "networks/linea_sepolia",

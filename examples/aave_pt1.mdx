@@ -1,0 +1,203 @@
+---
+title: Data from Chain to Database (Aave Example) — Part 1
+---
+
+In this two-part guide, we’ll walk through how to build an onchain data indexing pipeline from scratch using The Indexing Company’s infrastructure. By the end of this series, you’ll have a live pipeline deployed in **The Neighborhood**, the distributed data network built by The Indexing Company, and streaming onchain events from the Aave protocol into your own database or webhook.
+
+We'll also provide a [**Postman collection**](https://github.com/indexing-co/docs/blob/main/examples/Aave_Pipeline_to_Database_Example.postman_collection.json) so you can follow along step-by-step. For each command in this guide, we'll reference its name as found in the Postman collection.
+
+In **Part 1**, we’ll focus on:
+
+- Setting up a contract address filter
+- Writing transformation code to decode key contract events
+- Testing and registering the transformation for pipeline use
+
+In **Part 2**, we’ll:
+
+- Set up a target database or webhook
+- Create a data schema using transformation output
+- Deploy the full pipeline and verify that the data is flowing
+
+### The Example Contract: Aave Pool
+
+For this tutorial, we’ll be indexing events from the **Aave Pool contract**, which emits all the core supply, borrow, repay, and liquidation events. You can find its documentation and ABI here:
+
+- [Aave Pool contract ABI](https://aave.com/docs/developers/smart-contracts/pool)
+- [Etherscan link](https://etherscan.io/address/0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2)
+
+You can extract event signatures from either the ABI or directly from Etherscan. We recommend verifying or formatting them with an LLM to ensure they match the expected Solidity format used by The Indexing Company. [Follow this Event Extraction Example for tips](/examples/evm_event_sigs).
+
+---
+
+### Step 1: Set up a contract address filter
+
+**Postman Command Name**: `1. Create Contract Filter`
+
+The first step is to define which contracts your pipeline should listen to. If no filter is applied, the transformation code will be applied to all blocks. In our case, we’ll be indexing events from the [Aave Pool contract](https://etherscan.io/address/0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2).
+
+To register this contract as a filter, send the following `curl` request:
+
+```bash
+curl --location 'https://app.indexing.co/dw/filters/aave_example_filter' \
+--header 'X-API-KEY: YOUR_API_KEY' \
+--header 'Content-Type: application/json' \
+--data '{"values": [
+    "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2"
+]}'
+
+```
+
+This creates a named filter called `aave_example_filter` that targets the Aave Pool contract. You can confirm it was created by calling:
+
+**Postman Command Name**: `2. Get Contract Filters`
+
+```bash
+curl --location 'https://app.indexing.co/dw/filters/aave_example_filter' \
+--header 'X-API-KEY: YOUR_API_KEY'
+
+```
+
+If you need to remove the filter later:
+
+**Postman Command Name**: `3. Delete Contract Filter`
+
+```bash
+curl --location --request DELETE 'https://app.indexing.co/dw/filters/aave_example_filter' \
+--header 'X-API-KEY: YOUR_API_KEY' \
+--header 'Content-Type: application/json' \
+--data '{"values": [
+    "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2"
+]}'
+
+```
+
+---
+
+### Step 2: Write transformation code
+
+**JavaScript Filename**: `AavePool.js`
+
+Now that the contract filter is set up, it’s time to define the logic to extract relevant onchain events. The Indexing Company supports transformation functions written in JavaScript, which operate on each block. We will decode logs and format events for downstream use. For an instruction to find and transform these events visit our (Event Extraction Example)[/examples/evm_event_sigs].
+
+Below is the transformation code we’ll use to extract key Aave Pool events:
+
+```jsx
+function AaveEvents(block) {
+  const events = [];
+
+  for (const tx of block.transactions || []) {
+    for (const log of tx.receipt?.logs || []) {
+      const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
+        "event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)",
+        "event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)",
+        "event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)",
+        "event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)",
+        "event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)",
+        "event UserEModeSet(address indexed user, uint8 categoryId)"
+      ]);
+
+      if (decodedWithMetadata) {
+        events.push({
+          chain: block._network,
+          block: block.number,
+          transaction_hash: tx.hash,
+          log_index: log.logIndex,
+          contract_address: log.address?.toLowerCase(),
+          decoded: decodedWithMetadata.decoded,
+          event_name: decodedWithMetadata.metadata?.name.replace(/^event\s+/, "") || "UnknownEvent"
+        });
+      }
+    }
+  }
+
+  return events;
+}
+
+```
+
+We’ll test this transformation in the next step using a historical block and verify that it extracts the correct Aave Pool events before registering it into the system.
+
+---
+
+### Step 3: Test the transformation
+
+**Postman Command Name**: `4a. Test Transformation (JS code upload)` or `4b. Test Transformation (JS code as Text)`
+
+Before registering your transformation into a live pipeline, it's essential to test it against real onchain data. The Indexing API provides a `/transformations/test` endpoint that lets you simulate a run using a specific block number and your contract filter. We are using [this transaction](https://etherscan.io/tx/0xc0814c035946d6889497a82d6515647f939f1dfe5d86d46c4294b3c6b127bad7) to test on.
+To get the `network`you look up the Network Key [here](/networks). We are testing this on [Ethereum](https://docs.indexing.co/networks/overview) at block 22282149 (called beat in the API).
+
+Use the following `curl` to test the transformation code:
+
+```bash
+curl --location --globoff 'https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22282149&filter=aave_example_filter&filterKeys[0]=contract_address' \
+--header 'X-API-KEY: YOUR_API_KEY' \
+--form 'code=@"AavePool.js"'
+
+```
+
+If you're using Postman:
+
+- Select `POST`
+- Set the URL with the correct query parameters
+- Go to **Body > form-data**, set key to `code`, type `Text`, and paste in your transformation code OR set type `File` and upload the `AavePool.js` file.
+
+This test will return a JSON response with decoded logs for that block. Make sure your expected events (e.g., `Supply`, `Borrow`, etc.) show up correctly.
+
+For block `22282149` on Ethereum, you should receive an output similar to the following:
+
+```json
+[
+    {
+        "chain": "ETHEREUM",
+        "block": 22282149,
+        "transaction_hash": "0xc0814c035946d6889497a82d6515647f939f1dfe5d86d46c4294b3c6b127bad7",
+        "log_index": 534,
+        "contract_address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+        "decoded": {
+            "reserve": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+            "onBehalfOf": "0x3f3B17da678a495EbEc8a061657Cb6CFa4901531",
+            "referralCode": 0,
+            "user": "0x3f3B17da678a495EbEc8a061657Cb6CFa4901531",
+            "amount": "15000000000000000000000"
+        },
+        "event_name": "Supply"
+    }
+]
+
+```
+
+---
+
+### Step 4: Register the transformation
+
+**Postman Command Name**: `5a. Register Transformation (JS code upload)` or `5b. Register Transformation (JS code as Text)`
+
+Once you’ve confirmed your transformation code works correctly, you can register it for production use. This saves the code under a unique transformation ID, allowing you to reference it in the pipeline setup.
+
+Use the following `curl` to register the transformation:
+
+```bash
+curl --location 'https://app.indexing.co/dw/transformations/aave_example' \
+--header 'X-API-KEY: YOUR_API_KEY' \
+--form 'code="function AaveEvents(block) { ... }"'  # paste the full function here
+
+```
+
+In Postman:
+
+- Select `POST`
+- Use the same endpoint URL
+- Under **Body > form-data**, key should be `code`, set type to `Text`, and paste your transformation function OR set type `File` and upload the `AavePool.js` file.
+
+Once registered, your transformation is ready to be used in a full indexing pipeline in **The Neighborhood**.
+
+---
+
+## What’s Next?
+
+In [**Part 2**](/examples/aave_pt2), we’ll continue by wiring up the destination: setting up a database or webhook, generating a schema from your transformation output, and deploying the full pipeline.
+
+Need help getting started or want to integrate indexing into your stack?
+
+- Reach out to us at [indexing.co/get-in-touch](https://www.indexing.co/get-in-touch)
+- Or email us at [**hello@indexing.co**](mailto:hello@indexing.co)

@@ -1,0 +1,224 @@
+---
+title: How to Find and Use EVM Event Signatures in The Neighborhood
+---
+
+If you're building a pipeline in The Neighborhood and using transformation code to decode onchain events, getting the right event signatures is one of the most important steps.
+
+This tutorial will walk you through:
+
+- How to **find event signatures** from block explorers, source code, and documentation
+- How to **format them correctly** for use in The Neighborhood
+- How to use the **helper functions** in your transformation code
+- Common issues to troubleshoot if events aren't being picked up
+
+Let's start with the basics.
+
+---
+
+## How to Find Event Signatures
+
+To decode EVM logs in The Neighborhood, you need the **original Solidity declaration** of each event you care about. Here are three reliable methods to find them:
+
+---
+
+### Method 1: From the Contract ABI (Etherscan or Block Explorer)
+
+**Best for:** quick access to a list of event signatures
+
+**Where to look:**
+
+- Etherscan / Basescan → *Contract* tab → scroll to the **ABI** section
+
+**How to use it:**
+
+1. Copy the ABI JSON blob.
+2. Search for entries with `"type": "event"`.
+3. Look for the `name`, `inputs`, and `indexed` fields.
+
+**Tip:** Paste a full `event` object or the whole ABI into an LLM and ask it to convert it into a correct Solidity declaration (more below with prompts).
+
+**Example input:**
+
+```
+{
+  "anonymous": false,
+  "inputs": [
+    { "indexed": true, "internalType": "address", "name": "reserve", "type": "address" },
+    { "indexed": false, "internalType": "address", "name": "user", "type": "address" },
+    { "indexed": true, "internalType": "address", "name": "onBehalfOf", "type": "address" },
+    { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+    { "indexed": true, "internalType": "uint16", "name": "referralCode", "type": "uint16" }
+  ],
+  "name": "Supply",
+  "type": "event"
+}
+```
+
+**Expected output:**
+
+```
+event Supply(
+  address indexed reserve,
+  address user,
+  address indexed onBehalfOf,
+  uint256 amount,
+  uint16 indexed referralCode
+);
+```
+
+**Why it’s helpful:**
+
+- ABI is guaranteed to be linked to the deployed contract
+- Good fallback if the source code is hard to navigate or proxied
+
+---
+
+### Method 2: Logs from Real Transactions
+
+**Best for:** verifying an event was actually emitted
+
+**Where to look:**
+
+- Etherscan (or another Block Explorer) → go to a transaction → *Logs* tab
+
+**Example:**
+
+Go to a [transaction](https://etherscan.io/tx/0xf19165aa860274af3e5e4e481a19cef15fd058c107d501d16e0db43d615759d5#eventlog) that triggered the event (in this case`Supply`) and expand the event:
+
+- You'll see the decoded values
+- You see the `Name` of the event (e.g. `Supply (index_topic_1 address reserve, address user, index_topic_2 address onBehalfOf, uint256 amount, index_topic_3 uint16 referralCode)`)
+- You might also see the simplified event signature (e.g. `Supply(address,address,address,uint256,uint16)`)
+
+**Caution:**
+
+- These simplified signatures omit `indexed`
+- Do **not** copy/paste them directly
+- Use them to *identify the event*, then transform them into the right format (see below)
+
+---
+
+### Method 3: Protocol Documentation
+
+**Best for:** learning event structure quickly
+
+**Where to look:**
+
+- Official docs or GitHub repos (e.g. [Aave dev docs](https://aave.com/docs/developers/smart-contracts/pool))
+
+**What to check:**
+
+- Look for full Solidity definitions (not JSON ABI fragments)
+- Confirm parameters, types, and `indexed` markers
+
+**Watch out:**
+
+- Docs might be out of date or auto-generated (especially from TypeScript ABIs)
+- Double-check final signature with Etherscan source
+
+---
+
+**Having trouble finding the right signature?**
+
+Reach out to us at [hello@indexing.co](mailto:hello@indexing.co) — we're happy to help you source or verify the exact event declarations you need.
+
+---
+
+## What Are Event Signatures and Why They Matter
+
+Event signatures are the blueprint for decoding onchain activity in EVM-based blockchains. Every time a smart contract emits an event, it's logged onchain with a `topic0` — a keccak256 hash of the event's signature (name and argument types). If you want to index, decode, or filter on these logs, you need to provide the exact event signature.
+
+In The Neighborhood, transformation code uses helper functions like `utils.evmDecodeLogWithMetadata()` to decode logs. These functions rely on an array of event signatures written in their **original Solidity declaration format** — no shortened types, renamed parameters, or reordered arguments.
+
+Why this matters:
+
+- `event Borrow(address indexed reserve, address user, uint256 amount)` ≠ `event Borrow(address reserve, address user, uint256 amount)` — `indexed` is part of the signature!
+- `uint256` ≠ `uint8`, and `address[]` ≠ `address` — exact types must match the deployed contract.
+
+Providing a mismatched or standardized version of the signature means The Neighborhood won't be able to match and decode that log, even if the event did fire.
+
+## Formatting Signatures with an LLM
+
+Once you've found the event structure, you need to convert it into the exact Solidity format expected by The Neighborhood.
+
+You can use a large language model (like ChatGPT) to help with this by giving it a structured prompt. Here’s a sample query you can copy-paste:
+
+**Example prompt:**
+
+```
+Transform this event in the exact original Solidity declaration format, as written in the source code — without any type widening, narrowing, or standardization.
+
+Types must match the original source exactly (e.g., uint8 must stay uint8, int128 must stay int128, etc.).
+
+Return the events only in this format as a JavaScript array for use in utils.evmDecodeLogWithMetadata.
+
+Do not explain, alter formatting, or adjust types.
+
+Output format:
+
+const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
+  'event ...',
+  'event ...',
+]);
+```
+
+**Advanced:** You can also paste an entire contract page (like from Etherscan) into ChatGPT if it supports long context windows.
+
+**Example prompt for full page:**
+
+```
+Webpage: https://etherscan.io/address/0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2
+
+Give me back all events from this contract in the exact original Solidity declaration format, as written in the source code — without any type widening, narrowing, or standardization.
+
+Types must match the original source exactly (e.g., uint8 must stay uint8, int128 must stay int128, etc.).
+
+Return the events only in this format as a JavaScript array for use in utils.evmDecodeLogWithMetadata.
+
+Do not explain, alter formatting, or adjust types.
+
+Output format:
+
+const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
+  'event ...',
+  'event ...',
+]);
+```
+
+This method is quick, scalable, and accurate when used carefully — just always double-check the types and match them to verified sources.
+
+## Using Signatures in The Neighborhoods Helper Functions
+
+Once you've formatted your event signatures correctly, you're ready to use them in your transformation code.
+
+The Neighborhood provides several helper functions that make decoding EVM logs straightforward:
+
+```
+const decoded = utils.evmDecodeLog(log, [
+  'event ...',
+]);
+
+const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
+  'event ...',
+]);
+
+const topic0 = utils.evmMethodSignatureToHex('event Transfer(address,address,uint256)');
+```
+
+- Use `evmDecodeLog()` to decode logs into raw data.
+- Use `evmDecodeLogWithMetadata()` if you also want the matching event name returned.
+- Use `evmMethodSignatureToHex()` to convert a signature string to its `topic0` hash for filtering or debugging.
+
+### Common Troubleshooting Tips
+
+If your event isn't being picked up:
+
+- ✅ Double-check your signature format — types must match exactly, including `indexed`
+- ✅ Confirm that the event was actually emitted using a block explorer
+- ✅ Look for proxy contracts — your event might be emitted from a different implementation address
+- ✅ Use `utils.evmMethodSignatureToHex()` to get `topic0` and verify it matches the log's first topic
+
+Still stuck? Feel free to reach out — we’re happy to help troubleshoot.
+
+---
+
+##

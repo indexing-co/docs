@@ -1,0 +1,76 @@
+---
+title: How to Generate a Database Table from Your Neighborhood Pipeline Output
+---
+
+The Neighborhood streams decoded onchain data directly to your database. Once you’ve tested your transformation, the next step is preparing the right table to receive incoming data.
+
+To get a real example of your pipeline’s output use the [Test Transformation API](/guide/transformations/test) to run a dry-run and view the event format.
+
+Here’s an example output from a tested transformation:
+
+```json
+[
+  {
+    "chain": "ETHEREUM",
+    "block": 22282149,
+    "transaction_hash": "0xc0814c035946d6889497a82d6515647f939f1dfe5d86d46c4294b3c6b127bad7",
+    "log_index": 534,
+    "contract_address": "0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2",
+    "decoded": {
+      "reserve": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+      "onBehalfOf": "0x3f3B17da678a495EbEc8a061657Cb6CFa4901531",
+      "referralCode": 0,
+      "user": "0x3f3B17da678a495EbEc8a061657Cb6CFa4901531",
+      "amount": "15000000000000000000000"
+    },
+    "event_name": "Supply"
+  }
+]
+
+```
+
+---
+
+Alternatively, paste your transformation code into an large language model (LLM) like ChatGPT and ask it to generate a table based on this code. The model will make assumptions on the data, so ensure to check the generated table schema.
+
+## Step 1: Generate a Table Schema
+
+Paste the example output into an LLM or a tool like `jsonschema2ddl`, and ask it to generate a `CREATE TABLE` statement for your database of choice (e.g., PostgreSQL, MySQL, SQLite). The primary key has to be a unique combination.
+
+**Example prompt:**
+
+```
+Convert this JSON into a CREATE TABLE statement for [your database type].
+Use appropriate types (e.g., bigint, text, jsonb). Name the table [your table name].
+Add a compound primary key on (chain, transaction_hash, log_index).
+
+```
+
+---
+
+## Step 2: Run the Table Schema in Your Database
+
+Here’s an ideal result if you're using PostgreSQL:
+
+```sql
+CREATE TABLE AavePool (
+  chain TEXT NOT NULL,
+  block BIGINT NOT NULL,
+  transaction_hash TEXT NOT NULL,
+  log_index INTEGER NOT NULL,
+  contract_address TEXT NOT NULL,
+  event_name TEXT NOT NULL,
+  decoded JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  PRIMARY KEY (chain, transaction_hash, log_index)
+);
+
+```
+
+This schema uses a compound key to ensure idempotency. Since pipelines provide **at-least-once delivery**, uniqueness matters to prevent duplicate rows and ensure data integrity.
+
+---
+
+## Need Help?
+
+Need help setting this up? Send us your sample output at [hello@indexing.co](mailto:hello@indexig.co) — we’ll help generate or review the schema for you.

@@ -22,6 +22,6 @@ Chain reorganizations (reorgs) are automatically detected and handled by The Nei
     - Notify you of reorgs for manual handling
 
 # Latency Expectations
-The typical latency from on-chain confirmation of a block to data delivery is often sub-second for real time data, varying slightly based on specific implementation details and delivery methods. This latency is a starting point, which can be optimized further for specific use cases.
+The typical latency from onchain confirmation of a block to data delivery is often sub-second for real time data, varying slightly based on specific implementation details and delivery methods. This latency is a starting point, which can be optimized further for specific use cases.
 
 The parallel processing network scales horizontally to handle high volumes of data without sacrificing performance. For services like JITI, full wallet history backfills can complete in as little as one minute, depending on the wallet's activity level and the number of networks being indexed. The eventual goal with the Neighborhood is to have historical data ready in customized schemas at the speed of an API request, which will enabled by the parallel processing of the network.

@@ -1,44 +1,57 @@
 ---
 title: Overview
-description: Welcome to The Neighborhood
 ---
 
 <Warning>
 These docs are a work in progress! Reach out any time for questions 🐇
 </Warning>
 
-# Overview
-The Neighborhood is the quickest way to get transformed, onchain data.
+# Welcome to The Neighborhood
+__The Neighborhood__ is the fastest way to get transformed, onchain data—delivered exactly how you want it.
 
-We meet the data where it's at (in its raw form) and you, our neighbor, where you're at with your existing infra (e.g. database or webhook). This gap is bridged with distributed clusters of nodes we call Neighborhoods.
+We meet the data where it lives (in its raw form on-chain), and meet you, our neighbor, where you are—with your existing infra, like databases, webhooks, or Kafka. That gap is bridged by distributed clusters of nodes we call Neighborhoods.
 
-Today, the primary way to leverage The Neighborhood is with pipelines.
+The Neighborhood is a distributed data processing network developed by [The Indexing Company](https://www.indexing.co), a team focused on providing cutting-edge blockchain data infrastructure. While The Neighborhood powers the pipelines, The Indexing Company helps you deploy, optimize, and debug them. Reach out to us anytime at [hello@indexing.co](mailto:hello@indexing.co) or find us on [Farcaster](https://warpcast.com/channel/indexing).
 
-<Note>
-    Pipelines _push_ data to you. Instead of having to integrate with someone's subgraph or API schema, you simply get to define how the data is processed and where you'd like to receive. Data on demand, just the way you want it.
-</Note>
+# What You Can Do
+Today, the primary way to interact with The Neighborhood is through __pipelines__.
 
-Each pipeline consists of a:
-1. List of [networks](/networks) to subscribe to
-2. Filter (e.g. wallet addresses)
-2. Transformation step (JavaScript)
-3. Destination (Postgres, Webhooks)
+Instead of polling APIs or adapting to rigid subgraph schemas, you get to define:
+- What data you want
+- How you want it transformed
+- Where you want it delivered
 
+Data on demand, just the way you want it.
 
+Each pipeline consists of:
+- __Networks__: List of chains to subscribe to
+- __Filter__: e.g., contract addresses or wallet addresses
+- __Transformation__: JavaScript logic to reshape the data
+- __Destination__: Postgres, Webhook, or Kafka
 
 # Authentication
 
-All API endpoints are authenticated using an authentication header, `X-API-KEY`.
+All API endpoints are authenticated using the `X-API-KEY` header.
 
-<Note>
-To get a new key, reach out to [hello@indexing.co](mailto:hello@indexing.co) or find us on [Farcaster](https://warpcast.com/runninyeti.eth).
-</Note>
+To get access, email [hello@indexing.co](mailto:hello@indexing.co) or find us on [Farcaster](https://warpcast.com/channel/indexing).
 
-# OpenAPI Spec
-<Card
-  title="Neighborhood Endpoints"
-  icon="leaf"
-  href="https://github.com/indexing-co/docs/blob/main/guide/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+# Multi-Chain Support
+
+The Neighborhood works across many blockchain ecosystems and Virtual Machine (VM) types:
+- __EVM__: Ethereum, Optimism, Arbitrum, Base, and more
+- __SVM__: Solana and related chains
+- __MoveVM__: Sui, Aptos, Movement, etc.
+- __UTXO__: Bitcoin, Litecoin, Dogecoin, Cardano, etc.
+- __CosmWasm__: Cosmos, Osmosis, Injective and other IBC-compatible chains
+- ... and many more: Celestia (data availability), Farcaster (text data), any custom integration with data access
+
+Get the full list of currently supported [networks here](/networks).
+
+# Use Cases
+The Neighborhood powers:
+- Wallet and portfolio tracking
+- DeFi dashboards and market monitors
+- Onchain identity and reputation systems
+- Cross-chain aggregators
+- AI/ML pipelines needing structured blockchain data
+- And whatever you're building next!

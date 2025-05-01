@@ -1,0 +1,27 @@
+---
+title: Reliability & Performance
+---
+
+# SLAs and Uptime Commitments
+The Indexing Company maintains a 99.95% uptime for the internal infrastructure like The Neighborhood and passes along the uptime guarantees of our RPC providers for specific networks (generally 99% or better). Our status page provides real-time information about system performance: [https://admin.indexing.co/status](https://admin.indexing.co/status)
+
+# Data Processing Guarantees
+The Neighborhood is built on two core principles:
+
+1. __Meet customers where they are__: We integrate with your existing infrastructure rather than forcing you to adapt to ours.
+2. __Be ruthlessly fault tolerant__: We ensure that blockchain data is never lost with "at least once" delivery, even in the event of temporary system issues.
+
+# Chain Reorganization Handling
+Chain reorganizations (reorgs) are automatically detected and handled by The Neighborhood:
+
+1. For each new block, we track its unique hash and its parent's hash
+2. If a parent hash doesn't match the expected block hash, we detect a reorg
+3. Affected blocks are reprocessed to ensure data consistency
+4. Depending on your configuration, we can either:
+    - Maintain a safe distance from the chain tip (default)
+    - Notify you of reorgs for manual handling
+
+# Latency Expectations
+The typical latency from on-chain confirmation of a block to data delivery is often sub-second for real time data, varying slightly based on specific implementation details and delivery methods. This latency is a starting point, which can be optimized further for specific use cases.
+
+The parallel processing network scales horizontally to handle high volumes of data without sacrificing performance. For services like JITI, full wallet history backfills can complete in as little as one minute, depending on the wallet's activity level and the number of networks being indexed. The eventual goal with the Neighborhood is to have historical data ready in customized schemas at the speed of an API request, which will enabled by the parallel processing of the network.

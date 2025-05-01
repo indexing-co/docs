@@ -15,9 +15,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "guide/overview"
-            ]
+            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
           },
           {
             "group": "Defining Filters",
@@ -62,9 +60,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "networks/overview"
-            ]
+            "pages": ["networks/overview"]
           },
           {
             "group": "Networks",

@@ -1,0 +1,51 @@
+---
+title: Architecture and Key Components
+---
+
+The Neighborhood is a distributed data network, purpose-built to get you the transformed, onchain data you actually need—without making you wrangle raw logs or maintain brittle indexers.
+This page outlines how The Neighborhood works under the hood and how its modular architecture gives you complete control over your pipeline.
+
+# Core Architecture
+The Neighborhood is made up of several composable systems that work together to turn raw blockchain data into clean, actionable payloads:
+
+- __RPC Integration Layer__: Connects directly to blockchain RPCs across EVM, SVM, MoveVM, and other chains—real-time and historical.
+
+- __Parallel Processing Network (aka Neighborhoods)__: Our distributed cluster of nodes process data in parallel and on demand. These Neighborhoods index just in time, reducing latency and cutting down on unnecessary compute.
+
+- __Transformation Engine__: Transforms raw logs into structured output using JavaScript functions you write. Shape your data exactly how you want.
+
+
+- __Delivery System__: Routes processed data to your destination: Postgres, webhook, Kafka, or more.
+
+
+- __Configuration API__: Everything is controlled programmatically. Use our API to define pipelines, upload transformations, and manage delivery settings.
+
+# Data Flow
+Here’s what happens from block to destination:
+
+1. __Block Ingestion__: New blocks are streamed from live RPCs or pulled from our historical cache.
+
+2. __Distributed Processing__: Blocks are validated and routed to the appropriate Neighborhood nodes.
+
+3. __Filtering__: Your filters determine which addresses, contracts, or event signatures are relevant.
+
+4. __Transformation__: Custom JavaScript transforms run on each matched log or transaction.
+
+5. __Delivery__: The processed payloads are sent to your configured destination in near real-time.
+
+6. __Reorg Handling__: The Neighborhood monitors for chain reorganizations and can emit reorg-aware updates or alerts.
+
+# Modular Pipeline Components
+
+Each pipeline in The Neighborhood is made up of three core parts:
+
+1. __Filters__: Define which chains, contracts, events, or wallet addresses to watch.
+
+2. __Transformations__: Write JavaScript to reshape the data into a format your app can ingest directly.
+
+3. __Delivery__: Choose where the data should go: your database, a webhook, a Kafka topic—you name it. You can find the full list of supported destinations in our adapter directory.
+
+
+<Note>
+    Want to go deeper or have questions about custom deployment patterns like new delivery targets? The Indexing Company is here to help. Reach out at [hello@indexing.co](mailto:hello@indexing.co) or find us on [Farcaster](https://warpcast.com/channel/indexing).
+</Note>

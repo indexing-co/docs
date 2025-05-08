@@ -15,7 +15,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
+            "pages": [
+              "guide/overview",
+              "guide/architecture",
+              "guide/quality"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -60,7 +64,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -126,6 +132,7 @@
               "networks/kusama",
               "networks/linea",
               "networks/linea_sepolia",
+              "networks/litecoin",
               "networks/lyra",
               "networks/mantle",
               "networks/megaeth_testnet",

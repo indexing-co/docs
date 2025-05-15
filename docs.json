@@ -15,11 +15,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "guide/overview",
-              "guide/architecture",
-              "guide/quality"
-            ]
+            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
           },
           {
             "group": "Defining Filters",
@@ -53,6 +49,7 @@
         "tab": "Examples",
         "pages": [
           "examples/uniswap",
+          "examples/clanker_deployments",
           "examples/aave_pt1",
           "examples/aave_pt2",
           "examples/evm_event_sigs",
@@ -64,9 +61,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "networks/overview"
-            ]
+            "pages": ["networks/overview"]
           },
           {
             "group": "Networks",

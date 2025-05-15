@@ -1,0 +1,185 @@
+---
+title: Streaming Clanker Token Deployments
+---
+
+## Introduction
+
+Clanker is an AI-powered protocol that allows users to deploy ERC-20 tokens instantly on Base, using Farcaster posts, web interfaces like [clanker.world](https://clanker.world/), or Clanker’s developer API. It automates token creation, liquidity provisioning, and fee sharing.
+
+This tutorial shows you how to **stream Clanker token deployments in real time** using The Neighborhood's indexing infrastructure.
+
+**Note:** This tutorial uses a transformation written by Indexing Co that returns the **same data the Clanker team receives** from The Neighborhood. It’s based on all known `TokenCreated` events across Clanker deployment contracts.
+
+## Prerequisites
+
+You’ll need:
+
+- A Neighborhood API key. To get access, email [**hello@indexing.co**](mailto:hello@indexing.co)
+- Familiarity with smart contract events
+- curl or Postman
+- A webhook or database endpoint (optional)
+
+## ⚙️ What You’ll Build
+
+A pipeline that:
+
+1. Listens to Clanker’s `TokenCreated` events
+2. Decodes them with the event metadata
+3. Streams structured data to a webhook or database
+
+## 🛠️ Step 1: Create a Contract Filter
+
+Clanker’s `TokenCreated` event looks like:
+
+```solidity
+event TokenCreated(address token, string name, string symbol, uint256 timestamp);
+```
+
+To get the Keccak256 hash of the event signature:
+
+```
+viem.toEventHash('TokenCreated(address,string,string,uint256)')
+```
+
+Then create the [filter](https://docs.indexing.co/guide/filters/add):
+
+```bash
+curl --request POST \
+  --url https://app.indexing.co/dw/filters/clanker-token-deployments \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <your-api-key>' \
+  --data '{
+    "values": [
+      "0xd6f4364f..."  // Replace with actual hash
+    ]
+  }'
+```
+
+## 🔄 Step 2: Add the Transformation Logic
+
+This logic will give you the same data the Clanker team receives. It supports all known `TokenCreated` variants emitted by Clanker's suite of deployer contracts.
+
+```javascript
+function main(block) {
+  const CLANKER_DEPLOYMENT_EVENTS = [
+    {
+      address: '0x250c9FB2b411B48273f69879007803790A6AeA47',
+      signature:
+        'event TokenCreated(address tokenAddress, uint256 lpNftId, address deployer, string name, string symbol, uint256 supply, uint256 _supply, address lockerAddress)',
+    },
+    {
+      address: '0x9B84fcE5Dcd9a38d2D01d5D72373F6b6b067c3e1',
+      signature:
+        'event TokenCreated(address tokenAddress, uint256 lpNftId, address deployer, uint256 fid, string name, string symbol, uint256 supply, address lockerAddress, string castHash)',
+    },
+    {
+      address: '0x732560fa1d1A76350b1A500155BA978031B53833',
+      signature:
+        'event TokenCreated(address tokenAddress, uint256 positionId, address deployer, uint256 fid, string name, string symbol, uint256 supply, address lockerAddress, string castHash)',
+    },
+    {
+      address: '0x375C15db32D28cEcdcAB5C03Ab889bf15cbD2c5E',
+      signature:
+        'event TokenCreated(address tokenAddress, uint256 positionId, address deployer, uint256 fid, string name, string symbol, uint256 supply, string castHash)',
+    },
+    {
+      address: '0x2A787b2362021cC3eEa3C24C4748a6cD5B687382',
+      signature:
+        'event TokenCreated(address indexed tokenAddress,address indexed creatorAdmin, address indexed interfaceAdmin, address creatorRewardRecipient, address interfaceRewardRecipient, uint256 positionId, string name, string symbol, int24 startingTickIfToken0IsNewToken, string metadata, uint256 amountTokensBought, uint256 vaultDuration, uint8 vaultPercentage, address msgSender )',
+    },
+  ];
+
+  const createdTokens = [];
+  for (const tx of block.transactions) {
+    if (!tx.receipt) continue;
+
+    for (const log of tx.receipt.logs) {
+      const decoded = utils.evmDecodeLog(log, CLANKER_DEPLOYMENT_EVENTS);
+      if (decoded) {
+        createdTokens.push({
+          __filter_key: log.address,
+          contract_address: decoded.tokenAddress,
+          fid: decoded.fid,
+          deployed_at: new Date(parseInt(block.timestamp) * 1000).toISOString(),
+          symbol: decoded.symbol,
+          cast_hash: decoded.castHash,
+          deployer_address: decoded.deployer || decoded.creatorAdmin,
+        });
+      }
+    }
+  }
+
+  return createdTokens;
+}
+```
+
+## ✍️ Step 3: Create the Transformation
+
+```bash
+curl --request POST \
+  --url https://app.indexing.co/dw/transformations/clanker-transform \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <your-api-key>' \
+  --form 'code="// events/token_deploy/event.ts\nfunction main(block) { /* transformation logic here */ }"'
+```
+
+## 🔗 Step 4: Create the Pipeline
+
+```bash
+curl --request POST \
+  --url https://app.indexing.co/dw/pipelines \
+  --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: <your-api-key>' \
+  --data '{
+    "name": "clanker-deployments-pipeline",
+    "transformation": "clanker-transform",
+    "filter": "clanker-token-deployments",
+    "filterKeys": [
+      "0xd6f4364f..."
+    ],
+    "networks": [
+      "base"
+    ],
+    "enabled": true,
+    "delivery": {
+      "adapter": "HTTP",
+      "connection": {
+        "host": "https://webhook.site/...",
+        "headers": {
+          "some-auth-key":"some-auth-key"
+        }
+      }
+    }
+  }'
+```
+
+## 🥺 Step 5: Test the Stream
+
+Once live, your webhook should receive events like:
+
+```json
+    {
+        "__filter_key": "0x2A787b2362021cC3eEa3C24C4748a6cD5B687382",
+        "contract_address": "0x62Afd12FfDA5048eaC3c3dcFF3B4BACCf0D7Eb07",
+        "deployed_at": "2025-05-13T10:50:45.000Z",
+        "symbol": "WHT4",
+        "deployer_address": "0x4a9058Ad83Ac078a70d987f09B5327Aaf572C0E8"
+    }
+```
+
+You can test this manually using:
+
+```bash
+curl --location 'https://app.indexing.co/dw/transformations/test?network=base&beat=30172049' \
+--header 'X-API-KEY: <your-api-key>' \
+--form 'code="function main(block) { /* transformation logic here */ }"'
+```
+
+## 🚀 Wrap-Up
+
+You’ve now set up a real-time stream of Clanker token deployments using The Neighborhood. The data you're receiving is identical to what Clanker themselves use in production.
+
+Need help or want to go further?
+
+- Reach out at [indexing.co/get-in-touch](https://www.indexing.co/get-in-touch)
+- Or email us at [hello@indexing.co](mailto:hello@indexing.co)

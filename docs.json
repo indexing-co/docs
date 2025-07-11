@@ -15,7 +15,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
+            "pages": [
+              "guide/overview",
+              "guide/architecture",
+              "guide/quality"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -61,7 +65,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -81,7 +87,6 @@
               "networks/berachain",
               "networks/bitcoin",
               "networks/bitcoin_l1_testnet",
-              "networks/bitcoin_mempool",
               "networks/bittensor",
               "networks/blast",
               "networks/bsc",
@@ -102,7 +107,6 @@
               "networks/ethereum",
               "networks/ethereum_beacon",
               "networks/ethereum_classic",
-              "networks/ethereum_pow",
               "networks/eth_holesky",
               "networks/eth_sepolia",
               "networks/fantom",
@@ -146,6 +150,7 @@
               "networks/optimism",
               "networks/orderly",
               "networks/orderly_sepolia",
+              "networks/peaq",
               "networks/plume",
               "networks/plume_testnet",
               "networks/polkadot",
@@ -153,6 +158,7 @@
               "networks/polygon_amoy",
               "networks/polygon_zkevm",
               "networks/provenance",
+              "networks/redbelly",
               "networks/ripple",
               "networks/rise_testnet",
               "networks/ronin",

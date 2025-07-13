@@ -1,0 +1,129 @@
+---
+title: Polygon Money Market Events
+---
+
+## Introduction
+
+...
+
+## Prerequisites
+
+You’ll need:
+
+- A Neighborhood API key. To get access, email [**hello@indexing.co**](mailto:hello@indexing.co)
+- curl or Postman
+- An active postgres database
+
+## ⚙️ What You’ll Build
+
+A pipeline that:
+
+1. Listens to the majority of Polygon money market contracts and their events
+2. Decodes them with the event metadata
+3. Streams transformed data into a unified postgres table
+
+## 🛠️ Step 1: Create a Contract Filter
+
+Then create the [filter](https://docs.indexing.co/guide/filters/add):
+
+These are the contract addresses we'll want to listen to:
+
+```text
+0x794a61358D6845594F94dc1DB02A252b5b4814aD
+0xF25212E676D1F7F89Cd72fFEe66158f541246445
+0xaeB318360f27748Acb200CE616E389A6C9409a07
+```
+
+```bash
+curl https://app.indexing.co/dw/filters/polygon_money_market_addresses \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -d '{
+    "values": [
+      "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+      "0xF25212E676D1F7F89Cd72fFEe66158f541246445",
+      "0xaeB318360f27748Acb200CE616E389A6C9409a07"
+    ]
+  }'
+```
+
+## 🔄 Step 2: Add the Transformation Logic
+
+...explainer...
+
+View the full code [here](https://github.com/indexing-co/docs/blob/main/examples/transformations/polygon_money_market_events.js)
+
+## ✍️ Step 3: Create the Transformation
+
+```bash
+curl https://app.indexing.co/dw/transformations/polygon_money_market_events \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -F code=@./polygon_money_market_events.js
+```
+
+## 💽 Step 4: Create the Database
+
+...explainer...
+
+```sql
+create table events (
+  contract_address text,
+  transaction_hash text,
+  log_index: int,
+  method: text,
+  timestamp: timestamptz,
+  decoded: jsonb,
+  primary key (contract_address, transaction_hash, log_index)
+);
+create index on events (contract_address, method, timestamp);
+```
+
+## 🔗 Step 5: Create the Pipeline
+
+```bash
+curl https://app.indexing.co/dw/pipelines \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -d '{
+    "name": "polygon_money_market_events",
+    "transformation": "polygon_money_market_events",
+    "filter": "polygon_money_market_addresses",
+    "filterKeys": [
+      "contract_address"
+    ],
+    "networks": [
+      "polygon"
+    ],
+    "enabled": true,
+    "delivery": {
+      "adapter": "POSTGRES",
+      "connectionUri": "postgres://...",
+      "tableMap": {
+        "events": ["contract_address", "transaction_hash", "log_index"],
+      }
+    }
+  }'
+```
+
+## 🥺 Step 5: Test the Stream
+
+Once live, your database should receive events like:
+
+```json
+```
+
+You can test this manually and end-to-end using:
+
+```bash
+curl --location 'https://app.indexing.co/dw/pipelines/polygon_money_market_events/test/polygon/XXX' -H 'X-API-KEY: <your-api-key>'
+```
+
+## 🚀 Wrap-Up
+
+You’ve now set up a real-time stream of Clanker token deployments using The Neighborhood. The data you're receiving is identical to what Clanker themselves use in production.
+
+Need help or want to go further?
+
+- Reach out at [indexing.co/get-in-touch](https://www.indexing.co/get-in-touch)
+- Or email us at [hello@indexing.co](mailto:hello@indexing.co)

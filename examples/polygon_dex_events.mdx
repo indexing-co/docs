@@ -1,0 +1,160 @@
+---
+title: Polygon DEX Events
+---
+
+## Introduction
+
+...
+
+## Prerequisites
+
+You’ll need:
+
+- A Neighborhood API key. To get access, email [**hello@indexing.co**](mailto:hello@indexing.co)
+- curl or Postman
+- An active postgres database
+
+## ⚙️ What You’ll Build
+
+A pipeline that:
+
+1. Listens to the majority of Polygon DEX contracts and their events
+2. Decodes them with the event metadata
+3. Streams transformed data into a unified postgres table
+
+## 🛠️ Step 1: Create a Contract Filter
+
+Then create the [filter](https://docs.indexing.co/guide/filters/add):
+
+These are the contract addresses we'll want to listen to:
+
+```text
+0x1095692A6237d83C6a72F3F5eFEdb9A670C49223
+0x1Ec2eBf4F37E7363FDfe3551602425af0B3ceef9
+0xE592427A0AEce92De3Edee1F18E0157C05861564
+0xC36442b4a4522E871399CD717aBDD847Ab11FE88
+0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff
+0xf5b509bB0909a69B1c207E495f687a596C168E12
+0x8eF88E4c7CfbbaC1C163f7eddd4B578792201de6
+0xB1ED8d3b5059b3281D43306cC9D043cE8B22599b
+0xAC4c6e212A361c968F1725b4d055b47E63F80b75
+0xb7402ee99F0A008e461098AC3A27F4957Df89a40
+0x0DCDED3545D565bA3B19E683431381007245d983
+```
+
+```bash
+curl https://app.indexing.co/dw/filters/polygon_dex_addresses \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -d '{
+    "values": [
+      "0x1095692A6237d83C6a72F3F5eFEdb9A670C49223",
+      "0x1Ec2eBf4F37E7363FDfe3551602425af0B3ceef9",
+      "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+      "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
+      "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+      "0xf5b509bB0909a69B1c207E495f687a596C168E12",
+      "0x8eF88E4c7CfbbaC1C163f7eddd4B578792201de6",
+      "0xB1ED8d3b5059b3281D43306cC9D043cE8B22599b",
+      "0xAC4c6e212A361c968F1725b4d055b47E63F80b75",
+      "0xb7402ee99F0A008e461098AC3A27F4957Df89a40",
+      "0x0DCDED3545D565bA3B19E683431381007245d983"
+    ]
+  }'
+```
+
+## 🔄 Step 2: Add the Transformation Logic
+
+...explainer...
+
+View the full code [here](https://github.com/indexing-co/docs/blob/main/examples/transformations/polygon_dex_events.js)
+
+## ✍️ Step 3: Create the Transformation
+
+```bash
+curl https://app.indexing.co/dw/transformations/polygon_dex_events \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -F code=@./polygon_dex_events.js
+```
+
+## 💽 Step 4: Create the Database
+
+...explainer...
+
+```sql
+create table events (
+  contract_address text,
+  transaction_hash text,
+  log_index: int,
+  method: text,
+  timestamp: timestamptz,
+  decoded: jsonb,
+  primary key (contract_address, transaction_hash, log_index)
+);
+create index on events (contract_address, method, timestamp);
+
+create table swaps (
+  contract_address text,
+  transaction_hash text,
+  log_index: int,
+  timestamp: timestamptz,
+  token_in_address: text,
+  token_out_address: text,
+  token_in_amount: numeric,
+  token_out_amount: numberic,
+  primary key (contract_address, transaction_hash, log_index)
+);
+create index on swaps (token_in_address, timestamp);
+create index on swaps (token_out_address, timestamp);
+```
+
+## 🔗 Step 5: Create the Pipeline
+
+```bash
+curl https://app.indexing.co/dw/pipelines \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -d '{
+    "name": "polygon_dex_events",
+    "transformation": "polygon_dex_events",
+    "filter": "polygon_dex_addresses",
+    "filterKeys": [
+      "contract_address"
+    ],
+    "networks": [
+      "polygon"
+    ],
+    "enabled": true,
+    "delivery": {
+      "adapter": "POSTGRES",
+      "connectionUri": "postgres://...",
+      "tableMap": {
+        "events": ["contract_address", "transaction_hash", "log_index"],
+        "swaps": ["contract_address", "transaction_hash", "log_index"]
+      }
+    }
+  }'
+```
+
+## 🥺 Step 5: Test the Stream
+
+Once live, your database should receive events like:
+
+```json
+```
+
+You can test this manually and end-to-end using:
+
+```bash
+curl --location 'https://app.indexing.co/dw/pipelines/polygon_dex_events/test/polygon/XXX' -H 'X-API-KEY: <your-api-key>'
+```
+
+## 🚀 Wrap-Up
+
+You’ve now set up a real-time stream of Clanker token deployments using The Neighborhood. The data you're receiving is identical to what Clanker themselves use in production.
+
+Need help or want to go further?
+
+- Reach out at [indexing.co/get-in-touch](https://www.indexing.co/get-in-touch)
+- Or email us at [hello@indexing.co](mailto:hello@indexing.co)

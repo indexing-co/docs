@@ -40,9 +40,6 @@ function transform(block) {
   for (const tx of block.transactions) {
     if (!tx.receipt) continue;
 
-    // memoize token transfers if we detect a swap
-    let transfers;
-
     for (const log of tx.receipt.logs) {
       try {
         const { metadata, decoded } = utils.evmDecodeLog(
@@ -51,16 +48,22 @@ function transform(block) {
         );
 
         if (metadata && decoded) {
-          const timestamp = new Date(block.timestamp * 1000).toISOString();
-
-          // track all events
           events.push({
-            contract_address: log.address.toLowerCase(),
+            pool_address: log.address.toLowerCase(),
             transaction_hash: tx.hash,
             log_index: log.logIndex,
-            method: metadata.name,
-            timestamp,
-            decoded,
+            timestamp: new Date(block.timestamp * 1000).toISOString(),
+            wallet_address: (
+              decoded.user ||
+              decoded.from ||
+              decoded.to
+            )?.toLowerCase(),
+            token_address: metadata.name.endsWith("Collateral")
+              ? decoded.asset.toLowerCase()
+              : null,
+            amount:
+              BigInt(decoded.amount) *
+              BigInt(metadata.name.startsWith("Withdraw") ? -1 : 1),
           });
         }
       } catch (e) {
@@ -69,7 +72,5 @@ function transform(block) {
     }
   }
 
-  return {
-    events,
-  };
+  return events;
 }

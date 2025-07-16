@@ -22,13 +22,38 @@ A pipeline that:
 2. Decodes them with the event metadata
 3. Streams transformed data into a unified postgres table
 
-## 🔄 Step 1: Add the Transformation Logic
+## 🛠️ Step 1: Create a Contract Filter
+
+Then create the [filter](https://docs.indexing.co/guide/filters/add):
+
+These are the contract addresses we'll want to listen to:
+
+```text
+0x794a61358D6845594F94dc1DB02A252b5b4814aD
+0xF25212E676D1F7F89Cd72fFEe66158f541246445
+0xaeB318360f27748Acb200CE616E389A6C9409a07
+```
+
+```bash
+curl https://app.indexing.co/dw/filters/polygon_money_market_addresses \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -d '{
+    "values": [
+      "0x794a61358D6845594F94dc1DB02A252b5b4814aD",
+      "0xF25212E676D1F7F89Cd72fFEe66158f541246445",
+      "0xaeB318360f27748Acb200CE616E389A6C9409a07"
+    ]
+  }'
+```
+
+## 🔄 Step 2: Add the Transformation Logic
 
 We'll want to decode and return a unified set of in and out flows for known markets.
 
 View the full code [here](https://github.com/indexing-co/docs/blob/main/examples/transformations/polygon_money_market_events.js)
 
-## ✍️ Step 2: Create the Transformation
+## ✍️ Step 3: Create the Transformation
 
 ```bash
 curl https://app.indexing.co/dw/transformations/polygon_money_market_events \
@@ -37,7 +62,7 @@ curl https://app.indexing.co/dw/transformations/polygon_money_market_events \
   -F code=@./polygon_money_market_events.js
 ```
 
-## 💽 Step 3: Create the Database
+## 💽 Step 4: Create the Database
 
 ```sql
 create table events (
@@ -53,7 +78,7 @@ create table events (
 create index on events (wallet_address, timestamp desc);
 ```
 
-## 🔗 Step 4: Create the Pipeline
+## 🔗 Step 5: Create the Pipeline
 
 ```bash
 curl https://app.indexing.co/dw/pipelines \
@@ -62,6 +87,10 @@ curl https://app.indexing.co/dw/pipelines \
   -d '{
     "name": "polygon_money_market_events",
     "transformation": "polygon_money_market_events",
+    "filter": "polygon_money_market_addresses",
+    "filterKeys": [
+      "pool_address"
+    ],
     "networks": [
       "polygon"
     ],
@@ -75,18 +104,26 @@ curl https://app.indexing.co/dw/pipelines \
   }'
 ```
 
-## 🥺 Step 5: Test the Stream
+## 🥺 Step 6: Test the Stream
 
 Once live, your database should receive events like:
 
-```sql
-select * from liquidity_events limit 10;
+```json
+{
+  "pool_address": "0x794a61358d6845594f94dc1db02a252b5b4814ad",
+  "transaction_hash": "0xcaefff01eec692ef13503959437dfac7e1aeee9ecaa5a5d7b640a5dda30cccc6",
+  "log_index": 707,
+  "timestamp": "2025-07-16T23:12:14.000Z",
+  "wallet_address": "0xadeccaba96f86f2eb4fbe219be39a87db7534ddb",
+  "token_address": null,
+  "amount": "524130000"
+}
 ```
 
 You can test this manually and end-to-end using:
 
 ```bash
-curl --location 'https://app.indexing.co/dw/pipelines/polygon_money_market_events/test/polygon/XXX' -H 'X-API-KEY: <your-api-key>'
+curl --location 'https://app.indexing.co/dw/pipelines/polygon_money_market_events/test/polygon/74046461' -H 'X-API-KEY: <your-api-key>'
 ```
 
 ## 🚀 Wrap-Up

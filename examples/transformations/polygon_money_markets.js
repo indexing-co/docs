@@ -42,7 +42,7 @@ function transform(block) {
 
     for (const log of tx.receipt.logs) {
       try {
-        const { metadata, decoded } = utils.evmDecodeLog(
+        const { metadata, decoded } = utils.evmDecodeLogWithMetadata(
           log,
           POLYGON_MONEY_MARKET_EVENTS,
         );

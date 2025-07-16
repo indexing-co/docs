@@ -37,23 +37,28 @@ function transform(block) {
     "event WithdrawAndCollectAndSwap(address indexed nfpm, uint256 indexed tokenId, address token, uint256 amount)",
   ];
 
+  const TRANSFER_EVENTS = [
+    "event LogTransfer(address indexed token, address indexed from, address indexed to, uint256 amount, uint256 input1, uint256 input2, uint256 output1, uint256 output2)",
+    "event Transfer(address indexed from, address indexed to, uint256 value)",
+  ];
+
   const events = [];
   const swaps = [];
 
   for (const tx of block.transactions) {
     if (!tx.receipt) continue;
 
-    // memoize token transfers if we detect a swap
-    let transfers;
-
-    for (const log of tx.receipt.logs) {
+    for (let i = 0; i < tx.receipt.logs.length; i += 1) {
       try {
-        const { metadata, decoded } = utils.evmDecodeLog(
+        const log = tx.receipt.logs[i];
+
+        const { metadata, decoded } = utils.evmDecodeLogWithMetadata(
           log,
           POLYGON_DEX_EVENTS,
         );
 
         if (metadata && decoded) {
+          const method = metadata.name.split(" ").pop();
           const timestamp = new Date(block.timestamp * 1000).toISOString();
 
           // track all events
@@ -61,34 +66,43 @@ function transform(block) {
             contract_address: log.address.toLowerCase(),
             transaction_hash: tx.hash,
             log_index: log.logIndex,
-            method: metadata.name,
+            method,
             timestamp,
             decoded,
           });
 
           // also unify swap events
-          if (metadata.name.includes("Swap")) {
-            if (!transfers) {
-              transfers = templates.token_transfers({
-                ...block,
-                transactions: [tx],
-              });
-            }
+          if (["Swap", "Exchange", "Swapped"].includes(method)) {
+            const incomingTxferLog = tx.receipt.logs[i - 1];
+            const outgoingTxferLog = tx.receipt.logs[i + 1];
+            if (!incomingTxferLog || !outgoingTxferLog) continue;
+
+            const incomingTxfer = utils.evmDecodeLogWithMetadata(
+              incomingTxferLog,
+              TRANSFER_EVENTS,
+            );
+            const outgoingTxfer = utils.evmDecodeLogWithMetadata(
+              outgoingTxferLog,
+              TRANSFER_EVENTS,
+            );
+            if (!incomingTxfer || !outgoingTxfer) continue;
 
             const swap = {
               pool_address: log.address.toLowerCase(),
               transaction_hash: tx.hash,
               log_index: log.logIndex,
               timestamp,
-              token_in_address: null,
-              token_in_amount: null,
-              token_out_address: null,
-              token_out_amount: null,
-              from_address: null,
-              to_address: null,
+              token_in_address: incomingTxferLog.address.toLowerCase(),
+              token_in_amount: BigInt(
+                incomingTxfer.decoded.value || incomingTxfer.decoded.amount,
+              ),
+              token_out_address: incomingTxferLog.address.toLowerCase(),
+              token_out_amount: BigInt(
+                outgoingTxfer.decoded.value || outgoingTxfer.decoded.amount,
+              ),
+              from_address: incomingTxfer.from,
+              to_address: outgoingTxfer.to,
             };
-
-            const matchingTransfers = []; // @TODO
 
             swaps.push(swap);
           }

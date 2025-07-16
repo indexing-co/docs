@@ -97,12 +97,22 @@ curl https://app.indexing.co/dw/pipelines \
 Once live, your database should receive events like:
 
 ```json
+{
+  "pool_address": "0x4e3288c9ca110bcc82bf38f09a7b425c095d92bf",
+  "transaction_hash": "0xf087c159221c15b751979539d0db9c45b0e509c3f80cc988c9cebc51b7b69e40",
+  "log_index": 504,
+  "timestamp": "2025-07-16T23:21:42.000Z",
+  "token_in_address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+  "token_in_amount": "2323",
+  "token_out_address": "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+  "token_out_amount": "2323"
+}
 ```
 
 You can test this manually and end-to-end using:
 
 ```bash
-curl --location 'https://app.indexing.co/dw/pipelines/polygon_dex_events/test/polygon/XXX' -H 'X-API-KEY: <your-api-key>'
+curl --location 'https://app.indexing.co/dw/pipelines/polygon_dex_events/test/polygon/74046728' -H 'X-API-KEY: <your-api-key>'
 ```
 
 ## 🚀 Wrap-Up

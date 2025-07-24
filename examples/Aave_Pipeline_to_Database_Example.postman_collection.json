@@ -176,7 +176,7 @@
 			"response": []
 		},
 		{
-			"name": "4b. Test Transformation (JS code as Text)",
+			"name": "4b. Test Transformation (JS code as Text) Copy",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -191,13 +191,13 @@
 					"formdata": [
 						{
 							"key": "code",
-							"value": "function AaveEvents(block) {\n    const events = [];\n  \n    for (const tx of block.transactions || []) {\n      for (const log of tx.receipt?.logs || []) {\n          const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n            \"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n            \"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n            \"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n            \"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n            \"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n            \"event UserEModeSet(address indexed user, uint8 categoryId)\"\n          ]);\n        \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, \"\") || \"UnknownEvent\"\n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n",
+							"value": "function AaveEvents(block) {\n    const events = [];\n  \n\t  for (const tx of block.transactions || []) {\n\t\tfor (const log of tx.receipt?.logs || []) {\n\t\t  const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n\t\t\t\"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n\t\t\t\"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n\t\t\t\"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n\t\t\t\"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n\t\t\t\"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n\t\t\t\"event UserEModeSet(address indexed user, uint8 categoryId)\",\n\t\t\t\"event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)\",\n\t\t\t\"event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)\"\n\t\t  ]);\n\t\t\t  \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, '') || 'UnknownEvent'\n          \n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n  ",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22282149&filter=aave_example_filter&filterKeys[0]=contract_address",
+					"raw": "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22990372&filter=aave_example_filter&filterKeys[0]=contract_address",
 					"protocol": "https",
 					"host": [
 						"app",
@@ -216,7 +216,7 @@
 						},
 						{
 							"key": "beat",
-							"value": "22282149"
+							"value": "22990372"
 						},
 						{
 							"key": "filter",
@@ -285,7 +285,7 @@
 					"formdata": [
 						{
 							"key": "code",
-							"value": "function AaveEvents(block) {\n    const events = [];\n  \n    for (const tx of block.transactions || []) {\n      for (const log of tx.receipt?.logs || []) {\n          const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n            \"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n            \"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n            \"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n            \"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n            \"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n            \"event UserEModeSet(address indexed user, uint8 categoryId)\"\n          ]);\n        \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, \"\") || \"UnknownEvent\"\n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n",
+							"value": "function AaveEvents(block) {\n    const events = [];\n  \n\t  for (const tx of block.transactions || []) {\n\t\tfor (const log of tx.receipt?.logs || []) {\n\t\t  const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n\t\t\t\"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n\t\t\t\"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n\t\t\t\"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n\t\t\t\"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n\t\t\t\"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n\t\t\t\"event UserEModeSet(address indexed user, uint8 categoryId)\",\n\t\t\t\"event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)\",\n\t\t\t\"event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)\"\n\t\t  ]);\n\t\t\t  \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, '') || 'UnknownEvent'\n          \n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n  ",
 							"type": "text"
 						}
 					]

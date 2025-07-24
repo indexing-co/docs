@@ -93,7 +93,9 @@ function AaveEvents(block) {
         "event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)",
         "event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)",
         "event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)",
-        "event UserEModeSet(address indexed user, uint8 categoryId)"
+        "event UserEModeSet(address indexed user, uint8 categoryId)",
+        "event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)",
+        "event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)"
       ]);
 
       if (decodedWithMetadata) {
@@ -104,7 +106,7 @@ function AaveEvents(block) {
           log_index: log.logIndex,
           contract_address: log.address?.toLowerCase(),
           decoded: decodedWithMetadata.decoded,
-          event_name: decodedWithMetadata.metadata?.name.replace(/^event\s+/, "") || "UnknownEvent"
+          event_name: decodedWithMetadata.metadata?.name.replace(/^event\s+/, '') || 'UnknownEvent'
         });
       }
     }
@@ -112,7 +114,6 @@ function AaveEvents(block) {
 
   return events;
 }
-
 ```
 
 We’ll test this transformation in the next step using a historical block and verify that it extracts the correct Aave Pool events before registering it into the system.

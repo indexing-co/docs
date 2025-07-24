@@ -15,7 +15,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
+            "pages": [
+              "guide/overview",
+              "guide/architecture",
+              "guide/quality"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -63,7 +67,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -99,10 +105,12 @@
               "networks/degen",
               "networks/dogecoin",
               "networks/dydx",
+              "networks/eclipse",
               "networks/enjin",
               "networks/ethereum",
               "networks/ethereum_beacon",
               "networks/ethereum_classic",
+              "networks/ethereum_pow",
               "networks/eth_holesky",
               "networks/eth_sepolia",
               "networks/fantom",
@@ -154,6 +162,7 @@
               "networks/polygon_amoy",
               "networks/polygon_zkevm",
               "networks/provenance",
+              "networks/quai",
               "networks/redbelly",
               "networks/ripple",
               "networks/rise_testnet",

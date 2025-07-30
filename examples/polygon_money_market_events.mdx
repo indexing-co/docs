@@ -65,7 +65,7 @@ curl https://app.indexing.co/dw/transformations/polygon_money_market_events \
 ## 💽 Step 4: Create the Database
 
 ```sql
-create table events (
+create table money_market_events (
   pool_address text,
   transaction_hash text,
   log_index int,
@@ -75,7 +75,7 @@ create table events (
   amount numeric,
   primary key (pool_address, transaction_hash, log_index)
 );
-create index on events (wallet_address, timestamp desc);
+create index on money_market_events (wallet_address, timestamp desc);
 ```
 
 ## 🔗 Step 5: Create the Pipeline
@@ -98,7 +98,7 @@ curl https://app.indexing.co/dw/pipelines \
     "delivery": {
       "adapter": "POSTGRES",
       "connectionUri": "postgres://...",
-      "table": "liquidity_events",
+      "table": "money_market_events",
       "uniqueKeys": ["pool_address", "transaction_hash", "log_index"]
     }
   }'
@@ -123,7 +123,7 @@ Once live, your database should receive events like:
 You can test this manually and end-to-end using:
 
 ```bash
-curl --location 'https://app.indexing.co/dw/pipelines/polygon_money_market_events/test/polygon/74046461' -H 'X-API-KEY: <your-api-key>'
+curl 'https://app.indexing.co/dw/pipelines/polygon_money_market_events/test/polygon/74046461' -H 'X-API-KEY: <your-api-key>' -X POST
 ```
 
 ## 🚀 Wrap-Up

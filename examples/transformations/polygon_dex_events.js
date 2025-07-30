@@ -29,6 +29,7 @@ function transform(block) {
     "event Swap(address indexed sender, address indexed recipient, int256 amount0, int256 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick)",
     "event Swap(address indexed sender, uint256 amount0In, uint256 amount1In, uint256 amount0Out, uint256 amount1Out, address indexed to)", // V2
     "event Swap(address sender, address recipient, int256 amount0, int256 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick)", // V3
+    "event Swap(bytes32 indexed id, address indexed sender, int128 amount0, int128 amount1, uint160 sqrtPriceX96, uint128 liquidity, int24 tick, uint24 fee)", // V4
     "event Swap(address sender, uint256 inputAmount, address inputToken, uint256 amountOut, address outputToken, int256 slippage, uint32 referralCode)", // Seemed from Odos
     "event Swapped(uint256 amountIn, uint256 amountOut, address srcToken, address dstToken, address receiver, address sender, uint16 apiId)",
     "event TokenExchangeUnderlying(address indexed buyer, int128 sold_id, uint256 tokens_sold, int128 bought_id, uint256 tokens_bought)",
@@ -38,7 +39,7 @@ function transform(block) {
   ];
 
   const TRANSFER_EVENTS = [
-    "event LogTransfer(address indexed token, address indexed from, address indexed to, uint256 amount, uint256 input1, uint256 input2, uint256 output1, uint256 output2)",
+    "event LogFeeTransfer(address indexed token, address indexed from, address indexed to, uint256 amount, uint256 input1, uint256 input2, uint256 output1, uint256 output2)",
     "event Transfer(address indexed from, address indexed to, uint256 value)",
   ];
 
@@ -73,18 +74,22 @@ function transform(block) {
 
           // also unify swap events
           if (["Swap", "Exchange", "Swapped"].includes(method)) {
-            const incomingTxferLog = tx.receipt.logs[i - 1];
-            const outgoingTxferLog = tx.receipt.logs[i + 1];
-            if (!incomingTxferLog || !outgoingTxferLog) continue;
-
-            const incomingTxfer = utils.evmDecodeLogWithMetadata(
-              incomingTxferLog,
-              TRANSFER_EVENTS,
-            );
-            const outgoingTxfer = utils.evmDecodeLogWithMetadata(
-              outgoingTxferLog,
-              TRANSFER_EVENTS,
-            );
+            const [incomingTxfer, incomingTxferLog] = tx.receipt.logs
+              .slice(i + 1)
+              .reverse()
+              .slice(0, 2)
+              .map((log) => [
+                utils.evmDecodeLogWithMetadata(log, TRANSFER_EVENTS),
+                log,
+              ])
+              .find((v) => v[0]);
+            const [outgoingTxfer, outgoingTxferLog] = tx.receipt.logs
+              .slice(i + 1, i + 3)
+              .map((log) => [
+                utils.evmDecodeLogWithMetadata(log, TRANSFER_EVENTS),
+                log,
+              ])
+              .find((v) => v[0]);
             if (!incomingTxfer || !outgoingTxfer) continue;
 
             const swap = {
@@ -96,7 +101,7 @@ function transform(block) {
               token_in_amount: BigInt(
                 incomingTxfer.decoded.value || incomingTxfer.decoded.amount,
               ),
-              token_out_address: incomingTxferLog.address.toLowerCase(),
+              token_out_address: outgoingTxferLog.address.toLowerCase(),
               token_out_amount: BigInt(
                 outgoingTxfer.decoded.value || outgoingTxfer.decoded.amount,
               ),

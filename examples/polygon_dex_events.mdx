@@ -42,16 +42,17 @@ curl https://app.indexing.co/dw/transformations/polygon_dex_events \
 ...explainer...
 
 ```sql
-create table events (
+create table dex_events (
   contract_address text,
   transaction_hash text,
-  log_index: int,
-  method: text,
-  timestamp: timestamptz,
-  decoded: jsonb,
+  log_index int,
+  method text,
+  timestamp timestamptz,
+  decoded jsonb,
   primary key (contract_address, transaction_hash, log_index)
 );
-create index on events (contract_address, method, timestamp);
+
+create index on dex_events (contract_address, method,timestamp);
 
 create table swaps (
   pool_address text,
@@ -61,9 +62,12 @@ create table swaps (
   token_in_address text,
   token_out_address text,
   token_in_amount numeric,
-  token_out_amount numberic,
+  token_out_amount numeric,
+  from_address text,
+  to_address text,
   primary key (pool_address, transaction_hash, log_index)
 );
+
 create index on swaps (token_in_address, timestamp);
 create index on swaps (token_out_address, timestamp);
 ```
@@ -85,7 +89,7 @@ curl https://app.indexing.co/dw/pipelines \
       "adapter": "POSTGRES",
       "connectionUri": "postgres://...",
       "tableMap": {
-        "events": ["contract_address", "transaction_hash", "log_index"],
+        "dex_events": ["contract_address", "transaction_hash", "log_index"],
         "swaps": ["pool_address", "transaction_hash", "log_index"]
       }
     }
@@ -112,7 +116,7 @@ Once live, your database should receive events like:
 You can test this manually and end-to-end using:
 
 ```bash
-curl --location 'https://app.indexing.co/dw/pipelines/polygon_dex_events/test/polygon/74046728' -H 'X-API-KEY: <your-api-key>'
+curl 'https://app.indexing.co/dw/pipelines/polygon_dex_events/test/polygon/74046728' -H 'X-API-KEY: <your-api-key>' -X POST
 ```
 
 ## 🚀 Wrap-Up

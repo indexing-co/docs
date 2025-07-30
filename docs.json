@@ -15,11 +15,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "guide/overview",
-              "guide/architecture",
-              "guide/quality"
-            ]
+            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
           },
           {
             "group": "Defining Filters",
@@ -51,15 +47,28 @@
       },
       {
         "tab": "Examples",
-        "pages": [
-          "examples/uniswap",
-          "examples/clanker_deployments",
-          "examples/aave_pt1",
-          "examples/aave_pt2",
-          "examples/evm_event_sigs",
-          "examples/pipeline_to_postgres",
-          "examples/polygon_dex_events",
-          "examples/polygon_money_market_events"
+        "groups": [
+          {
+            "group": "Featured Walkthroughs",
+            "pages": ["examples/aave_pt1", "examples/aave_pt2"]
+          },
+          {
+            "group": "EVM",
+            "pages": [
+              "examples/uniswap",
+              "examples/clanker_deployments",
+              "examples/polygon_dex_events",
+              "examples/polygon_money_market_events"
+            ]
+          },
+          {
+            "group": "Data Delivery",
+            "pages": ["examples/pipeline_to_postgres"]
+          },
+          {
+            "group": "Tips & Tricks",
+            "pages": ["examples/evm_event_sigs"]
+          }
         ]
       },
       {
@@ -67,9 +76,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "networks/overview"
-            ]
+            "pages": ["networks/overview"]
           },
           {
             "group": "Networks",

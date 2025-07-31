@@ -53,6 +53,7 @@ function transform(block) {
             transaction_hash: tx.hash,
             log_index: log.logIndex,
             timestamp: new Date(block.timestamp * 1000).toISOString(),
+            method: metadata.name.split(" ").pop(),
             wallet_address: (
               decoded.user ||
               decoded.from ||

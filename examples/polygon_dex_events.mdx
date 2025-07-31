@@ -14,7 +14,7 @@ You’ll need:
 - curl or Postman
 - An active postgres database
 
-## ⚙️ What You’ll Build
+## What You’ll Build
 
 A pipeline that:
 
@@ -22,13 +22,13 @@ A pipeline that:
 2. Decodes them with the event metadata
 3. Streams transformed data into a unified postgres table
 
-## 🔄 Step 1: Add the Transformation Logic
+## Step 1: Add the Transformation Logic
 
 We'll want to decode and return all events + unified swaps for known DEXs.
 
 View the full code [here](https://github.com/indexing-co/docs/blob/main/examples/transformations/polygon_dex_events.js)
 
-## ✍️ Step 2: Create the Transformation
+## Step 2: Create the Transformation
 
 ```bash
 curl https://app.indexing.co/dw/transformations/polygon_dex_events \
@@ -37,9 +37,7 @@ curl https://app.indexing.co/dw/transformations/polygon_dex_events \
   -F code=@./polygon_dex_events.js
 ```
 
-## 💽 Step 3: Create the Database
-
-...explainer...
+## Step 3: Create the Database
 
 ```sql
 create table dex_events (
@@ -72,7 +70,9 @@ create index on swaps (token_in_address, timestamp);
 create index on swaps (token_out_address, timestamp);
 ```
 
-## 🔗 Step 4: Create the Pipeline
+The `contract_address` and `pool_address` represents the swap pool for `dex_events` and `swaps`, respectively. The above provides a single, primary key index for each table, but you may find you want other indexes added based on scale and query patterns.
+
+## Step 4: Create the Pipeline
 
 ```bash
 curl https://app.indexing.co/dw/pipelines \
@@ -96,7 +96,7 @@ curl https://app.indexing.co/dw/pipelines \
   }'
 ```
 
-## 🥺 Step 5: Test the Stream
+## Step 5: Test the Stream
 
 Once live, your database should receive events like:
 
@@ -119,7 +119,7 @@ You can test this manually and end-to-end using:
 curl 'https://app.indexing.co/dw/pipelines/polygon_dex_events/test/polygon/74046728' -H 'X-API-KEY: <your-api-key>' -X POST
 ```
 
-## 🚀 Wrap-Up
+## Wrap-Up
 
 You've now set up a real-time stream of Polygon DEX events using The Neighborhood. The data you're receiving is contains events from the most used Polygon DEXs. In case you want to add new DEXs we encourage you to reach out to us or adjust the template.
 

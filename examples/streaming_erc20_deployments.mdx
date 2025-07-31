@@ -1,0 +1,144 @@
+---
+title: Streaming ERC-20 Contract Deployments
+---
+
+## Introduction
+
+This tutorial shows you how to detect and stream **ERC-20 contract deployments** in real time using **The Neighborhood’s indexing infrastructure**. Basically we are going to track new token creations.
+
+Unlike event-based pipelines, this example scans the entire chain for contract creation transactions and identifies which of these deployments implement the ERC-20 interface.
+
+> Note: The output of this pipeline can be used to trigger another [pipeline that filters](https://docs.indexing.co/guide/filters/overview) only the token transfers for these deployed tokens, creating a complete token tracking system.
+
+## Prerequisites
+
+You’ll need:
+
+- A Neighborhood API key. To get access, email **hello@indexing.co**
+- Basic understanding of EVM transactions and contract bytecode
+- `curl` or Postman
+- A webhook, database endpoint, or another supported delivery method
+
+## What You’ll Build
+
+A pipeline that:
+
+- Scans every block for contract creation traces
+- Detects contracts implementing the ERC-20 standard (using function selectors)
+- Streams structured deployment data to a destination of your choice
+
+**Delivery:** Choose where the data should go: your database, a webhook, a Kafka topic - you name it! You can find the full list of supported destinations in our [adapter directory](https://www.notion.so/16e25f031053805da10cf65179f977c6?pvs=21).
+
+## Step 1: Add the Transformation Logic
+
+This transformation inspects each transaction trace within a block. If a contract is deployed and its bytecode contains known ERC-20 method selectors, it emits a record with the deployment details.
+
+```javascript
+function main(block) {
+  const newContracts = [];
+
+  const erc20InterfaceSignatures = [
+    '18160ddd', // totalSupply()
+    '70a08231', // balanceOf(address)
+    'a9059cbb', // transfer(address,uint256)
+    '23b872dd', // transferFrom(address,address,uint256)
+    '095ea7b3', // approve(address,uint256)
+    'dd62ed3e', // allowance(address,address)
+  ];
+
+  for (const tx of block.transactions) {
+    if (!tx.receipt || !tx.traces?.length) continue;
+
+    for (let ti = 0; ti < tx.traces.length; ti += 1) {
+      const result = tx.traces[ti].result;
+      if (result?.address && result.code) {
+        if (!erc20InterfaceSignatures.find(fourByte => result.code.includes(fourByte))) {
+          continue;
+        }
+
+        newContracts.push({
+          chain: block._network.toLowerCase(),
+          timestamp: new Date(block.timestamp * 1000),
+          transactionHash: tx.hash,
+          traceIndex: ti,
+          address: result.address.toLowerCase(),
+        });
+      }
+    }
+  }
+
+  return newContracts;
+}
+```
+
+You can also download the code [here](https://github.com/indexing-co/docs/blob/main/examples/transformations/erc20_contract_deployments.js)
+
+## Step 2: Create the Transformation
+
+Use the following API request to [create your transformation](https://docs.indexing.co/guide/transformations/create) in The Neighborhood:
+
+```bash
+curl https://app.indexing.co/dw/transformations/erc20_deployments \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -F code=@./erc20_contract_deployments.js
+```
+
+## Step 3: Create the Pipeline
+
+Since this pipeline scans all contract deployments, no filter step is required. [Create the pipeline](https://docs.indexing.co/guide/pipelines/create) with:
+
+```bash
+curl https://app.indexing.co/dw/pipelines \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -d '{
+    "name": "erc20_deployments_pipeline",
+    "transformation": "erc20_deployments",
+    "networks": [
+      "base"
+    ],
+    "enabled": true,
+    "delivery": {
+      "adapter": "HTTP",
+      "connection": {
+        "host": "https://webhook.site/..."
+      }
+    }
+  }'
+```
+
+## Step 4: Test the Stream
+
+You can test the transformation logic against block 8925894 on Base, which contains a known ERC-20 deployment:
+
+```json
+[
+  {
+    "chain": "base",
+    "timestamp": "2024-01-07T15:25:35.000Z",
+    "transactionHash": "0xcea27f1618e28ecc59b2faed86cdec29a92218261fe9efe374a39201e93545c5",
+    "traceIndex": 0,
+    "address": "0x4ed4e862860bed51a9570b96d89af5e1b0efefed"
+  }
+]
+```
+
+Run this test with our [Test endpoint](https://docs.indexing.co/guide/transformations/test):
+
+```bash
+curl 'https://app.indexing.co/dw/transformations/test?network=base&beat=8925894' \
+  -H 'X-API-KEY: <your-api-key>' \
+  -F code=@./erc20_contract_deployments.js
+```
+
+## Wrap-Up
+
+You’ve now set up a real-time pipeline for detecting ERC-20 contract deployments on **The Neighborhood**.
+
+To go further, **chain this output into a second pipeline** that filters and streams token transfers for these newly deployed tokens.
+
+Need help or want to go further?
+
+- Reach out at [indexing.co/get-in-touch](https://www.indexing.co/get-in-touch)
+- Or email us at [hello@indexing.co](mailto:hello@indexing.co)

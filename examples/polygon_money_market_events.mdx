@@ -14,7 +14,7 @@ You’ll need:
 - curl or Postman
 - An active postgres database
 
-## ⚙️ What You’ll Build
+## What You’ll Build
 
 A pipeline that:
 
@@ -22,7 +22,7 @@ A pipeline that:
 2. Decodes them with the event metadata
 3. Streams transformed data into a unified postgres table
 
-## 🛠️ Step 1: Create a Contract Filter
+## Step 1: Create a Contract Filter
 
 Then create the [filter](https://docs.indexing.co/guide/filters/add):
 
@@ -47,13 +47,13 @@ curl https://app.indexing.co/dw/filters/polygon_money_market_addresses \
   }'
 ```
 
-## 🔄 Step 2: Add the Transformation Logic
+## Step 2: Add the Transformation Logic
 
 We'll want to decode and return a unified set of in and out flows for known markets.
 
 View the full code [here](https://github.com/indexing-co/docs/blob/main/examples/transformations/polygon_money_market_events.js)
 
-## ✍️ Step 3: Create the Transformation
+## Step 3: Create the Transformation
 
 ```bash
 curl https://app.indexing.co/dw/transformations/polygon_money_market_events \
@@ -62,13 +62,14 @@ curl https://app.indexing.co/dw/transformations/polygon_money_market_events \
   -F code=@./polygon_money_market_events.js
 ```
 
-## 💽 Step 4: Create the Database
+## Step 4: Create the Database
 
 ```sql
 create table money_market_events (
   pool_address text,
   transaction_hash text,
   log_index int,
+  method text,
   timestamp timestamptz,
   wallet_address text,
   token_address text,
@@ -78,7 +79,29 @@ create table money_market_events (
 create index on money_market_events (wallet_address, timestamp desc);
 ```
 
-## 🔗 Step 5: Create the Pipeline
+The `pool_address` represents the liquidity pool that the event is tied to and `method` can be used to identify specific events. The above provides a single, primary key index, but you may find you want other indexes added based on scale and query patterns.
+
+### Example Queries
+
+Identifying USD volume by liquidity pool within the last hour:
+
+```sql
+select
+  pool_address,
+  sum(amount) / pow(10, 6) as volume
+from
+  money_market_events
+where
+  token_address in (
+    '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', -- USDC
+    '0xc2132d05d31c914a87c6611c10748aeb04b58e8f' -- USDT
+  )
+  and timestamp > now() - interval '1 hour'
+group by pool_address
+order by sum(amount) desc;
+```
+
+## Step 5: Create the Pipeline
 
 ```bash
 curl https://app.indexing.co/dw/pipelines \
@@ -104,7 +127,7 @@ curl https://app.indexing.co/dw/pipelines \
   }'
 ```
 
-## 🥺 Step 6: Test the Stream
+## Step 6: Test the Stream
 
 Once live, your database should receive events like:
 
@@ -126,7 +149,7 @@ You can test this manually and end-to-end using:
 curl 'https://app.indexing.co/dw/pipelines/polygon_money_market_events/test/polygon/74046461' -H 'X-API-KEY: <your-api-key>' -X POST
 ```
 
-## 🚀 Wrap-Up
+## Wrap-Up
 
 You've now set up a real-time stream of Polygon Money Market events using The Neighborhood. The data you're receiving is contains events from the most used Polygon Money Markets, AAVE and Compound V3. In case you want to add new DEXs we encourage you to reach out to us or adjust the template.
 

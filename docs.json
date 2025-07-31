@@ -58,7 +58,8 @@
               "examples/uniswap",
               "examples/clanker_deployments",
               "examples/polygon_dex_events",
-              "examples/polygon_money_market_events"
+              "examples/polygon_money_market_events",
+              "examples/streaming_erc20_deployments"
             ]
           },
           {

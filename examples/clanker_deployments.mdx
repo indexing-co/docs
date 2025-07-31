@@ -19,7 +19,7 @@ You’ll need:
 - curl or Postman
 - A webhook or database endpoint (optional)
 
-## ⚙️ What You’ll Build
+## What You’ll Build
 
 A pipeline that:
 
@@ -27,7 +27,7 @@ A pipeline that:
 2. Decodes them with the event metadata
 3. Streams structured data to a webhook or database
 
-## 🛠️ Step 1: Create a Contract Filter
+## Step 1: Create a Contract Filter
 
 Clanker’s `TokenCreated` event looks like:
 
@@ -55,7 +55,7 @@ curl --request POST \
   }'
 ```
 
-## 🔄 Step 2: Add the Transformation Logic
+## Step 2: Add the Transformation Logic
 
 This logic will give you the same data the Clanker team receives. It supports all known `TokenCreated` variants emitted by Clanker's suite of deployer contracts.
 
@@ -113,7 +113,7 @@ function main(block) {
 }
 ```
 
-## ✍️ Step 3: Create the Transformation
+## Step 3: Create the Transformation
 
 ```bash
 curl --request POST \
@@ -153,7 +153,7 @@ curl --request POST \
   }'
 ```
 
-## 🥺 Step 5: Test the Stream
+## Step 5: Test the Stream
 
 Once live, your webhook should receive events like:
 
@@ -175,7 +175,7 @@ curl --location 'https://app.indexing.co/dw/transformations/test?network=base&be
 --form 'code="function main(block) { /* transformation logic here */ }"'
 ```
 
-## 🚀 Wrap-Up
+## Wrap-Up
 
 You’ve now set up a real-time stream of Clanker token deployments using The Neighborhood. The data you're receiving is identical to what Clanker themselves use in production.
 

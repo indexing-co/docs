@@ -119,7 +119,7 @@ function transform(block) {
   }
 
   return {
-    events,
+    dex_events: events,
     swaps,
   };
 }

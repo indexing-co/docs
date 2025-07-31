@@ -35,6 +35,14 @@ function transform(block) {
     )
     .flat();
 
+  // Fallback map for contracts that don't emit asset/reserve in event
+  const TOKEN_BY_POOL_ADDRESS = {
+    "0xf25212e676d1f7f89cd72ffee66158f541246445":
+      "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", // cUSDCv3 → USDC
+    "0xaeb318360f27748acb200ce616e389a6c9409a07":
+      "0xC2132D05D31c914a87C6611C10748AaCbA5B36eA", // cUSDTv3 → USDT
+  };
+
   const events = [];
 
   for (const tx of block.transactions) {
@@ -48,8 +56,10 @@ function transform(block) {
         );
 
         if (metadata && decoded) {
+          const lowerAddress = log.address.toLowerCase();
+
           events.push({
-            pool_address: log.address.toLowerCase(),
+            pool_address: lowerAddress,
             transaction_hash: tx.hash,
             log_index: log.logIndex,
             timestamp: new Date(block.timestamp * 1000).toISOString(),
@@ -59,16 +69,17 @@ function transform(block) {
               decoded.from ||
               decoded.to
             )?.toLowerCase(),
-            token_address: metadata.name.endsWith("Collateral")
-              ? decoded.asset.toLowerCase()
-              : null,
+            token_address:
+              (decoded.asset || decoded.reserve)?.toLowerCase() ||
+              TOKEN_BY_POOL_ADDRESS[lowerAddress] ||
+              null,
             amount:
               BigInt(decoded.amount) *
               BigInt(metadata.name.startsWith("Withdraw") ? -1 : 1),
           });
         }
       } catch (e) {
-        // pass by unmatched logs
+        // skip unmatched logs
       }
     }
   }

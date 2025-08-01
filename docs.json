@@ -50,7 +50,11 @@
         "groups": [
           {
             "group": "Featured Walkthroughs",
-            "pages": ["examples/aave_pt1", "examples/aave_pt2"]
+            "pages": [
+              "examples/aave_pt1",
+              "examples/aave_pt2",
+              "examples/token_transfers"
+            ]
           },
           {
             "group": "EVM",

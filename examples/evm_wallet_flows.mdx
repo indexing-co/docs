@@ -1,0 +1,157 @@
+---
+title: Track Wallet Flows Across EVM Chains
+---
+
+In this step-by-step guide, we'll show you how to build a pipeline in **The Neighborhood**, the distributed data network built by The Indexing Company, that monitors wallet flows from 117 known Binance addresses and streams all related token transfers into your own database or webhook.
+
+By the end of this tutorial, you’ll be able to:
+
+- Track wallet or contract flows across **any EVM chain**
+- Stream token transfer data into **PostgreSQL**, **webhooks**, or other destinations
+- Apply filters to specific wallets, tokens, or transfer amounts
+- Backfill historical data on demand
+
+🔑 To get started, you’ll need an API key. You can request access at [indexing.co/get-in-touch](https://indexing.co/get-in-touch) or by emailing us at [hello@indexing.co](mailto:hello@indexing.co).
+
+# Step 1: Create a Wallet Filter
+
+This filter targets 117 known Binance wallets. You can replace these addresses with your own list if you want to track different wallets, smart contracts, or entities.
+
+Don’t worry about (your) size! The Neighborhood supports **filters with over millions of addresses easily**.
+
+```bash
+curl --location 'https://app.indexing.co/dw/filters/binance_addresses' \
+--header 'x-api-key: YOUR_API_KEY' \
+--header 'content-type: application/json' \
+--data '{"values": ["0x3f5ce5fbfe3e9af3971dd833d26ba9b5c936f0be","0xd551234ae421e3bcba99a0da6d736074f22192ff","0x564286362092d8e7936f0549571a803b203aaced","0x0681d8db095565fe8a346fa0277bffde9c0edbbf","0xfe9e8709d3215310075d67e3ed32a380ccf451c8","0x4e9ce36e442e55ecd9025b9a6e0d88485d628a67","0xbe0eb53f46cd790cd13851d5eff43d12404d33e8","0xf977814e90da44bfa03b6295a0616a897441acec","0x001866ae5b3de6caa5a51543fd9fb64f524f5478","0x85b931a32a0725be14285b66f1a22178c672d69b","0x708396f17127c42383e3b9014072679b2f60b82f","0xe0f0cfde7ee664943906f17f7f14342e76a5cec7","0x8f22f2063d253846b53609231ed80fa571bc0c8f","0x28c6c06298d514db089934071355e5743bf21d60","0x21a31ee1afc51d94c2efccaa2092ad1028285549","0xdfd5293d8e347dfe59e90efd55b2956a1343963d","0x56eddb7aa87536c09ccc2793473599fd21a8b17f","0x9696f59e4d72e237be84ffd425dcad154bf96976","0x4d9ff50ef4da947364bb9650892b2554e7be5e2b","0x4976a4a02f38326660d17bf34b431dc6e2eb2327","0xd88b55467f58af508dbfdc597e8ebd2ad2de49b3","0x7dfe9a368b6cf0c0309b763bb8d16da326e8f46e","0x345d8e3a1f62ee6b1d483890976fd66168e390f2","0xc3c8e0a39769e2308869f7461364ca48155d1d9e","0x2e581a5ae722207aa59acd3939771e7c7052dd3d","0x44592b81c05b4c35efb8424eb9d62538b949ebbf","0xa344c7ada83113b3b56941f6e85bf2eb425949f3","0x5a52e96bacdabb82fd05763e25335261b270efcb","0x06a0048079ec6571cd1b537418869cde6191d42d","0x892e9e24aea3f27f4c6e9360e312cce93cc98ebe","0x00799bbc833d5b168f0410312d2a8fd9e0e3079c","0x141fef8cd8397a390afe94846c8bd6f4ab981c48","0x50d669f43b484166680ecc3670e4766cdb0945ce","0x2f7e209e0f5f645c7612d7610193fe268f118b28","0xd9d93951896b4ef97d251334ef2a0e39f6f6d7d7","0x19184ab45c40c2920b0e0e31413b9434abd243ed","0x294b9b133ca7bc8ed2cdd03ba661a4c6d3a834d9","0x5d7f34372fa8708e09689d400a613eee67f75543","0x515b72ed8a97f42c568d6a143232775018f133c8","0x631fc1ea2270e98fbd9d92658ece0f5a269aa161","0xbd612a3f30dca67bf60a39fd0d35e39b7ab80774","0x161ba15a5f335c9f06bb5bbb0a9ce14076fbb645","0x3c783c21a0383057d128bae431894a5c19f9cf06","0xe7804c37c13166ff0b37f5ae0bb07a3aebb6e245","0x9f8c163cba728e99993abe7495f06c0a3c8ac8b9","0xb1256d6b31e4ae87da1d56e5890c66be7f1c038e","0x8894e0a0c962cb723c1976a4421c95949be2d4e3","0x01c952174c24e1210d26961d456a77a39e1f0bb0","0x082489a616ab4d46d1947ee3f912e080815b08da","0xb38e8c17e38363af6ebdcb3dae12e0243582891d","0xacd03d601e5bb1b275bb94076ff46ed9d753435a","0x1b5b4e441f5a22bfd91b7772c780463f66a74b35","0x17b692ae403a8ff3a3b2ed7676cf194310dde9af","0x8ff804cc2143451f454779a40de386f913dcff20","0xad9ffffd4573b642959d3b854027735579555cbc","0x7a8a34db9acd10c3b6277473b192fe47192569ca","0x1d40b233cdf2cc0cdc347d5401d5b02c2831a0c1","0x4fabb145d64652a948d72533023f6e7a623c7c53","0xf2de20dbf4b224af77aa4ff446f43318800bd6b4","0x7ab33ad1e91ddf6d5edf69a79d5d97a9c49015d4","0x4d072a68d0428a9a3054e03ad7ee61c557b537ab","0x1763f1a93815ee6e6bc3c4475d31cc9570716db2","0x972bed5493f7e7bdc760265fbb4d8e73ea89e453","0x290275e3db66394c52272398959845170e4dcb88","0x505e71695e9bc45943c58adec1650577bca68fd9","0x001ceb373c83ae75b9f5cf78fc2aba3e185d09e2","0x07b664c8af37eddaa7e3b6030ed1f494975e9dfb","0x0e4158c85ff724526233c1aeb4ff6f0c46827fbe","0xb32e9a84ae0b55b8ab715e4ac793a61b277bafa3","0xa7c0d36c4698981fab42a7d8c783674c6fe2592d","0xa84fd90d8640fa63d194601e0b2d1c9094297083","0x3304e22ddaa22bcdc5fca2269b418046ae7b566a","0x923fc76cb13a14e5a87843d309c9f401ec498e2d","0x3cdfb47b0e910d9190ed788726cd72489bf10499","0x417850c1cd0fb428eb63649e9dc4c78ede9a34e8","0x4a9e49a45a4b2545cb177f79c7381a30e1dc261f","0x4aefa39caeadd662ae31ab0ce7c8c2c9c0a013e8","0x87917d879ba83ce3ada6e02d49a10c1ec1988062","0x7aed074ca56f5050d5a2e512ecc5bf7103937d76","0x835678a611b28684005a5e2233695fb6cbbb0007","0x6d8be5cdf0d7dee1f04e25fd70b001ae3b907824","0x7e278a68a35d76a7e4b2c9d8b778acd775c6d832","0x6be5a267b04e9f24cdc1824fd38d63c436be91ab","0xeb25df7c79a85640c4420680461dcdfd91f0dfad","0x3931dab967c3e2dbb492fe12460a66d0fe4cc857","0x25681ab599b4e2ceea31f8b498052c53fc2d74db","0x29fe6c66097f7972d8e47c4f691576327fcf9a12","0xfdd2ba77db02caa6a9869735dac577d809cadd11","0x9bf4001d307dfd62b26a2f1307ee0c0307632d59","0xdee6238780f98c0ca2c2c28453149bea49a3abc9","0x6d9348910e6ed90c1bb170c47965f5f7b8e19763","0xa4e471dbfe8c95d4c44f520b19cee436c01c3267","0xd2c0b70b9b451f7e2688d72460215d84caa6cbe4","0xf6436829cf96ea0f8bc49d300c536fcc4f84c4ed","0xcc71dd74183ea325f537665678263565c0b7e493","0xe4b5b2667e049ac8c79ae6c5a7e3300815aa32be","0x00f9451385bf75910d80374eb42edf36d1a3f243","0xef7fb88f709ac6148c07d070bc71d252e8e13b92","0x8b99f3660622e21f2910ecca7fbe51d654a1517d","0xab83d182f3485cf1d6ccdd34c7cfef95b4c08da4","0x0f7b0c7d9ea425b451d0738c2ece43161eff64bc","0xc365c3315cf926351ccaf13fa7d19c8c4058c8e1","0x66f791456b82921cbc3f89a98c24ea21784973a1","0x2f47a1c2db4a3b78cda44eade915c3b19107ddcc","0xbdd75a97c29294ff805fb2fee65abd99492b32a8","0xf17aced3c7a8daa29ebb90db8d1b6efd8c364a18","0xb3f923eabaf178fc1bd8e13902fc5c61d3ddef5b","0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503","0x9be89d2a4cd102d8fecc6bf9da793be995c22541","0x7884f51dc1410387371ce61747cb6264e1daee0b","0xff0a024b66739357c4ed231fb3dbc0c8c22749f5","0xeb2d2f1b8c558a40207669291fda468e50c8a0bb","0xdccf3b77da55107280bd850ea519df3705d1a75a","0xa180fe01b906a1be37be6c534a3300785b20d947","0x29bdfbf7d27462a2d115748ace2bd71a2646946c","0x1fbe2acee135d991592f167ac371f3dd893a508b","0x73f5ebe90f27b46ea12e5795d16c4b408b19cc6f","0xe2fc31f816a9b94326492132018c3aecc4a93ae1","0xf92402bb795fd7cd08fb83839689db79099c8c9c","0x9430801ebaf509ad49202aabc5f5bc6fd8a3daf8","0x8f80c66c70cbc52009babb04c1cadf9b40109289","0x15ece0d7de25436bcfcf3d62a9085ddc7838aee9","0x370b8eaad4e5970a853d25cd26a499150fd38274","0xf3084ed5596c3ef9fcf53689da3b998e621a34c4","0x50460c4cd74094cd591f455cad457e99c4ab8be0","0x9cd1ac952951fe63c658589db0dde32fc55b815b","0x0b95993a39a363d99280ac950f5e4536ab5c5566","0xfc19e4ce0e0a27b09f2011ef0512669a0f76367a","0x61189da79177950a7272c88c6058b96d4bcd6be2","0x34ea4138580435b5a521e460035edb19df1938c1","0xf60c2ea62edbfe808163751dd0d8693dcb30019c","0x43c5b1c2be8ef194a509cf93eb1ab3dbd07b97ed","0x21d45650db732ce5df77685d6021d7d5d1da807f","0x211ee0129a67e7d44514152eb43d9f31103ac46b","0x9223c017a39d4806d1d92c15046ae28c32c6d8e7","0xd5c08681719445a5fdce2bda98b341a49050d821","0xb14a67c63bda5024d2effd53aa16a00bb7f9a30a","0xb650b0b1f183d59343da753d94c068bfea92693d"]}'
+```
+
+This creates a named filter called `binance_addresses` that we’ll reference throughout the rest of the pipeline.
+
+# Step 2: Write the Transformation Code
+
+This code extracts ERC20 `Transfer` events and outputs the fields you care about (chain, addresses, token, amount, etc.).
+
+```bash
+curl --location 'https://app.indexing.co/dw/transformations/binance_transfers' \
+--header 'x-api-key: YOUR_API_KEY' \
+--header 'content-type: application/json' \
+--data '{"code":"function(block) { const txfers = templates.token_transfers(block); return txfers.map((txfer, i) => ({ chain: block._network, block_number: txfer.blockNumber, transaction_hash: txfer.transactionHash, log_index: txfer.index || i, timestamp: txfer.timestamp, from_address: txfer.from, to_address: txfer.to, token_address: txfer.token, amount: txfer.amount })); }"}'
+
+```
+
+Want to filter specific tokens or high-value transfers only? Just modify this JavaScript transformation to include logic based on `token_address` or `amount`.
+
+# Step 3: Test Your Transformation
+
+Use a known Ethereum block to test the transformation output before you deploy it.
+
+```bash
+curl --location --globoff 'https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22731766&filter=binance_addresses&filterKeys[0]=from_address&filterKeys[1]=to_address' \
+--header 'x-api-key: YOUR_API_KEY' \
+--form 'code="function(block) { const txfers = templates.token_transfers(block); return txfers.map((txfer, i) => ({ chain: block._network, block_number: txfer.blockNumber, transaction_hash: txfer.transactionHash, log_index: txfer.index || i, timestamp: txfer.timestamp, from_address: txfer.from, to_address: txfer.to, token_address: txfer.token, amount: txfer.amount })); }"'
+```
+
+Make sure your filter is catching transfers as expected before moving on.
+
+# Step 4: Set Up the Destination Table
+
+We’ll deliver data into a PostgreSQL table. Here’s a schema that matches the transformation output:
+
+```sql
+CREATE TABLE binance_transfers (
+  chain TEXT NOT NULL,
+  block_number BIGINT NOT NULL,
+  transaction_hash TEXT NOT NULL,
+  log_index INTEGER NOT NULL,
+  timestamp TIMESTAMPTZ NOT NULL,
+  from_address TEXT,
+  to_address TEXT,
+  token_address TEXT,
+  amount NUMERIC,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  PRIMARY KEY (chain, transaction_hash, log_index)
+);
+```
+
+Prefer a webhook or cloud storage target? Just change the delivery adapter in the next step.
+
+# Step 5: Create the Pipeline
+
+Now deploy the full pipeline into **The Neighborhood** and stream data from any EVM chain in real time.
+
+```bash
+curl --location 'https://app.indexing.co/dw/pipelines' \
+--header 'x-api-key: YOUR_API_KEY' \
+--header 'content-type: application/json' \
+--data-raw '{
+  "name": "binance_transfers",
+  "transformation": "binance_transfers",
+  "filter": "binance_addresses",
+  "filterKeys": ["from_address", "to_address"],
+  "networks": ["ethereum, base"],
+  "enabled": true,
+  "delivery": {
+    "adapter": "POSTGRES",
+    "connectionUri": "YOUR_POSTGRES_URI",
+    "table": "binance_transfers",
+    "uniqueKeys": ["chain", "transaction_hash", "log_index"]
+  }
+}'
+```
+
+The `"networks"` field supports:
+
+- `"EVM"` → all EVM-compatible chains
+- Or any individual network from our [Network List](https://docs.indexing.co/networks/overview)
+
+---
+
+# Optional: Backfill Historical Data
+
+Want to backfill historical transfers from a specific period?
+
+```bash
+curl --location 'https://app.indexing.co/dw/pipelines/binance_transfers/backfill' \
+--header 'Content-Type: application/json' \
+--header 'X-API-KEY: YOUR_API_KEY' \
+--data '{
+  "network": "ethereum",
+  "value": "0x3f5CE5FBFe3E9af3971dD833D26bA9b5C936f0bE",
+  "beatStart": 23029865,
+  "beatEnd": 23029872,
+  "beats": [23029869]
+}'
+
+```
+
+You can script this to run over large date ranges or trigger programmatically for new addresses.
+
+---
+
+## Delivery Options
+
+Most developers need the data is streamed into their target database. You can also:
+
+- Send transfers to a webhook
+- Store data in S3 or cloud storage
+- Filter by `token_address` and `amount` to trigger alerts
+
+The transformation layer is fully programmable and real-time, enabling custom logic for analytics, compliance, trading, or monitoring.
+
+---
+
+# Recap
+
+You’ve now deployed a live pipeline in **The Neighborhood** that:
+
+- Tracks 117 Binance addresses
+- Can work across **any EVM chain**
+- Streams token transfers into a database or webhook
+- Can be customized for filtering, backfills, and alerts
+
+Ready to build your own?
+
+Browse our [Network List](https://docs.indexing.co/networks/overview) to see which networks you would deploy this pipeline on. If the network is not listed, let us know! We can easily onboard new networks for you.
+
+To run these pipelines you can [contact us](https://indexing.co/get-in-touch) to get your API key.

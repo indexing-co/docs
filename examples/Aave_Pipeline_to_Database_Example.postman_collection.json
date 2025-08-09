@@ -1,348 +1,284 @@
 {
-	"info": {
-		"_postman_id": "3ebffd4f-7502-4585-830f-1540cd3e36ac",
-		"name": "Aave Example",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "42566030"
-	},
-	"item": [
-		{
-			"name": "1. Create Contract Filter",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"values\": [\r\n        \"0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2\"\r\n    ]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/filters/aave_example_filter",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"filters",
-						"aave_example_filter"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "2. Get Contract Filters",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/filters/aave_example_filter",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"filters",
-						"aave_example_filter"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "3. Delete Contract Filter",
-			"request": {
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\"values\": [\n        \"0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2\"\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/filters/aave_example_filter",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"filters",
-						"aave_example_filter"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "4a. Test Transformation (JS code upload)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "code",
-							"type": "file",
-							"src": "tPJeriTQP/AavePool.js"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22282149&filter=aave_example_filter&filterKeys[0]=contract_address",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"transformations",
-						"test"
-					],
-					"query": [
-						{
-							"key": "network",
-							"value": "ethereum"
-						},
-						{
-							"key": "beat",
-							"value": "22282149"
-						},
-						{
-							"key": "filter",
-							"value": "aave_example_filter"
-						},
-						{
-							"key": "filterKeys[0]",
-							"value": "contract_address"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "4b. Test Transformation (JS code as Text) Copy",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "code",
-							"value": "function AaveEvents(block) {\n    const events = [];\n  \n\t  for (const tx of block.transactions || []) {\n\t\tfor (const log of tx.receipt?.logs || []) {\n\t\t  const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n\t\t\t\"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n\t\t\t\"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n\t\t\t\"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n\t\t\t\"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n\t\t\t\"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n\t\t\t\"event UserEModeSet(address indexed user, uint8 categoryId)\",\n\t\t\t\"event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)\",\n\t\t\t\"event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)\"\n\t\t  ]);\n\t\t\t  \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, '') || 'UnknownEvent'\n          \n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n  ",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22990372&filter=aave_example_filter&filterKeys[0]=contract_address",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"transformations",
-						"test"
-					],
-					"query": [
-						{
-							"key": "network",
-							"value": "ethereum"
-						},
-						{
-							"key": "beat",
-							"value": "22990372"
-						},
-						{
-							"key": "filter",
-							"value": "aave_example_filter"
-						},
-						{
-							"key": "filterKeys[0]",
-							"value": "contract_address"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "5a. Register Transformation (JS code upload)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "code",
-							"type": "file",
-							"src": "_Ug1oy3Kx/AavePool.js"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/transformations/aave_example",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"transformations",
-						"aave_example"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "5b. Register Transformation (JS code as Text)",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "code",
-							"value": "function AaveEvents(block) {\n    const events = [];\n  \n\t  for (const tx of block.transactions || []) {\n\t\tfor (const log of tx.receipt?.logs || []) {\n\t\t  const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n\t\t\t\"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n\t\t\t\"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n\t\t\t\"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n\t\t\t\"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n\t\t\t\"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n\t\t\t\"event UserEModeSet(address indexed user, uint8 categoryId)\",\n\t\t\t\"event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)\",\n\t\t\t\"event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)\"\n\t\t  ]);\n\t\t\t  \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, '') || 'UnknownEvent'\n          \n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n  ",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/transformations/aave_example",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"transformations",
-						"aave_example"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "6. Deploy PipelinePipeline",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "X-API-KEY",
-						"value": "YOUR-API-KEY",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"aave_example_pipeline\",\r\n    \"transformation\": \"aave_example\",\r\n    \"filter\": \"aave_example_filter\",\r\n    \"filterKeys\": [\r\n        \"contract_address\"\r\n    ],\r\n    \"networks\": [\r\n        \"ethereum\"\r\n    ],\r\n    \"enabled\": true,\r\n    \"delivery\": {\r\n        \"adapter\": \"POSTGRES\",\r\n        \"connectionUri\": \"[YOUR-DATABASE-URI]\",\r\n        \"table\": \"aavepool\",\r\n        \"uniqueKeys\": [\r\n            \"chain\", \"transaction_hash\", \"log_index\"\r\n        ]\r\n    }\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://app.indexing.co/dw/pipelines/",
-					"protocol": "https",
-					"host": [
-						"app",
-						"indexing",
-						"co"
-					],
-					"path": [
-						"dw",
-						"pipelines",
-						""
-					]
-				}
-			},
-			"response": []
-		}
-	]
+  "info": {
+    "_postman_id": "3ebffd4f-7502-4585-830f-1540cd3e36ac",
+    "name": "Aave Example",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "42566030"
+  },
+  "item": [
+    {
+      "name": "1. Create Contract Filter",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"values\": [\r\n        \"0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2\"\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/filters/aave_example_filter",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "filters", "aave_example_filter"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Get Contract Filters",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/filters/aave_example_filter",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "filters", "aave_example_filter"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Delete Contract Filter",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"values\": [\n        \"0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2\"\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/filters/aave_example_filter",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "filters", "aave_example_filter"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4a. Test Transformation (JS code upload)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "code",
+              "type": "file",
+              "src": "tPJeriTQP/AavePool.js"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22282149&filter=aave_example_filter&filterKeys[0]=contract_address",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "transformations", "test"],
+          "query": [
+            {
+              "key": "network",
+              "value": "ethereum"
+            },
+            {
+              "key": "beat",
+              "value": "22282149"
+            },
+            {
+              "key": "filter",
+              "value": "aave_example_filter"
+            },
+            {
+              "key": "filterKeys[0]",
+              "value": "contract_address"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4b. Test Transformation (JS code as Text) Copy",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "code",
+              "value": "function AaveEvents(block) {\n    const events = [];\n  \n\t  for (const tx of block.transactions || []) {\n\t\tfor (const log of tx.receipt?.logs || []) {\n\t\t  const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n\t\t\t\"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n\t\t\t\"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n\t\t\t\"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n\t\t\t\"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n\t\t\t\"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n\t\t\t\"event UserEModeSet(address indexed user, uint8 categoryId)\",\n\t\t\t\"event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address indexed user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)\",\n\t\t\t\"event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)\"\n\t\t  ]);\n\t\t\t  \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, '') || 'UnknownEvent'\n          \n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n  ",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/transformations/test?network=ethereum&beat=22990372&filter=aave_example_filter&filterKeys[0]=contract_address",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "transformations", "test"],
+          "query": [
+            {
+              "key": "network",
+              "value": "ethereum"
+            },
+            {
+              "key": "beat",
+              "value": "22990372"
+            },
+            {
+              "key": "filter",
+              "value": "aave_example_filter"
+            },
+            {
+              "key": "filterKeys[0]",
+              "value": "contract_address"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5a. Register Transformation (JS code upload)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "code",
+              "type": "file",
+              "src": "_Ug1oy3Kx/AavePool.js"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/transformations/aave_example",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "transformations", "aave_example"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5b. Register Transformation (JS code as Text)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "code",
+              "value": "function AaveEvents(block) {\n    const events = [];\n  \n\t  for (const tx of block.transactions || []) {\n\t\tfor (const log of tx.receipt?.logs || []) {\n\t\t  const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [\n\t\t\t\"event Supply(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint16 indexed referralCode)\",\n\t\t\t\"event Withdraw(address indexed reserve, address indexed user, address indexed to, uint256 amount)\",\n\t\t\t\"event Borrow(address indexed reserve, address user, address indexed onBehalfOf, uint256 amount, uint8 interestRateMode, uint256 borrowRate, uint16 indexed referralCode)\",\n\t\t\t\"event Repay(address indexed reserve, address indexed user, address indexed repayer, uint256 amount, bool useATokens)\",\n\t\t\t\"event FlashLoan(address indexed target, address initiator, address indexed asset, uint256 amount, uint8 interestRateMode, uint256 premium, uint16 indexed referralCode)\",\n\t\t\t\"event UserEModeSet(address indexed user, uint8 categoryId)\",\n\t\t\t\"event LiquidationCall(address indexed collateralAsset, address indexed debtAsset, address user, uint256 debtToCover, uint256 liquidatedCollateralAmount, address liquidator, bool receiveAToken)\",\n\t\t\t\"event ReserveDataUpdated(address indexed reserve, uint256 liquidityRate, uint256 stableBorrowRate, uint256 variableBorrowRate, uint256 liquidityIndex, uint256 variableBorrowIndex)\"\n\t\t  ]);\n\t\t\t  \n        if (decodedWithMetadata) {\n          events.push({\n            chain: block._network,\n            block: block.number,\n            transaction_hash: tx.hash,\n            log_index: log.logIndex,\n            contract_address: log.address?.toLowerCase(),\n            decoded: decodedWithMetadata.decoded,\n            event_name: decodedWithMetadata.metadata?.name.replace(/^event\\s+/, '') || 'UnknownEvent'\n          \n          });\n        }\n      }\n    }\n  \n    return events;\n  }\n  ",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/transformations/aave_example",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "transformations", "aave_example"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6. Deploy PipelinePipeline",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-KEY",
+            "value": "YOUR-API-KEY",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"aave_example_pipeline\",\r\n    \"transformation\": \"aave_example\",\r\n    \"filter\": \"aave_example_filter\",\r\n    \"filterKeys\": [\r\n        \"contract_address\"\r\n    ],\r\n    \"networks\": [\r\n        \"ethereum\"\r\n    ],\r\n    \"enabled\": true,\r\n    \"delivery\": {\r\n        \"adapter\": \"POSTGRES\",\r\n        \"connectionUri\": \"[YOUR-DATABASE-URI]\",\r\n        \"table\": \"aavepool\",\r\n        \"uniqueKeys\": [\r\n            \"chain\", \"transaction_hash\", \"log_index\"\r\n        ]\r\n    }\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://app.indexing.co/dw/pipelines/",
+          "protocol": "https",
+          "host": ["app", "indexing", "co"],
+          "path": ["dw", "pipelines", ""]
+        }
+      },
+      "response": []
+    }
+  ]
 }

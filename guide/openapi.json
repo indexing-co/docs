@@ -329,6 +329,37 @@
       }
     },
     "/transformations/{name}": {
+      "get": {
+        "description": "Returns a specific transformations' code",
+        "responses": {
+          "200": {
+            "description": "Transformation code",
+            "content": {
+              "text/javascript": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "description": "Update a transformation",
         "parameters": [
@@ -383,6 +414,53 @@
           },
           "400": {
             "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transformations": {
+      "get": {
+        "description": "Returns all transformations",
+        "responses": {
+          "200": {
+            "description": "List of transformations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "required": ["name"],
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
             "content": {
               "application/json": {
                 "schema": {

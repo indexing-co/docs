@@ -32,6 +32,8 @@
               "guide/transformations/overview",
               "guide/transformations/helpers",
               "guide/transformations/create",
+              "guide/transformations/get",
+              "guide/transformations/list",
               "guide/transformations/test"
             ]
           },

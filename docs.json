@@ -15,7 +15,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
+            "pages": [
+              "guide/overview",
+              "guide/architecture",
+              "guide/quality"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -71,11 +75,15 @@
           },
           {
             "group": "Data Delivery",
-            "pages": ["examples/pipeline_to_postgres"]
+            "pages": [
+              "examples/pipeline_to_postgres"
+            ]
           },
           {
             "group": "Tips & Tricks",
-            "pages": ["examples/evm_event_sigs"]
+            "pages": [
+              "examples/evm_event_sigs"
+            ]
           }
         ]
       },
@@ -84,7 +92,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -115,6 +125,7 @@
               "networks/celo",
               "networks/chiliz",
               "networks/chiliz_spicy",
+              "networks/core",
               "networks/cosmos",
               "networks/cyber",
               "networks/degen",
@@ -162,6 +173,7 @@
               "networks/movement_bardock",
               "networks/neon",
               "networks/oasis_emerald",
+              "networks/oasis_sapphire",
               "networks/oasys",
               "networks/op_sepolia",
               "networks/optimism",

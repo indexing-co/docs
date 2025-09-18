@@ -56,7 +56,7 @@ View more about how we support networks and working with us [here](https://index
   );
 
   for (const n of allNetworks.networks) {
-    const previewLink = `https://jiti.indexing.co/networks/${n.key}/${n.lastBeat}`;
+    const previewLink = `https://jiti.indexing.co/networks/${n.key}/latest`;
     const statusLink = `https://jiti.indexing.co/status/${n.key}`;
 
     const content = `---

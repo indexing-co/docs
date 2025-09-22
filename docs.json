@@ -99,6 +99,7 @@
           {
             "group": "Networks",
             "pages": [
+              "networks/0g",
               "networks/abstract",
               "networks/acala",
               "networks/apechain",

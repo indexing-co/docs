@@ -15,11 +15,7 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": [
-              "guide/overview",
-              "guide/architecture",
-              "guide/quality"
-            ]
+            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
           },
           {
             "group": "Defining Filters",
@@ -45,6 +41,10 @@
             "group": "Deploying Pipelines",
             "pages": [
               "guide/pipelines/create",
+              "guide/pipelines/get",
+              "guide/pipelines/disable",
+              "guide/pipelines/networks-enable",
+              "guide/pipelines/networks-disable",
               "guide/pipelines/list",
               "guide/pipelines/backfill"
             ]
@@ -75,15 +75,11 @@
           },
           {
             "group": "Data Delivery",
-            "pages": [
-              "examples/pipeline_to_postgres"
-            ]
+            "pages": ["examples/pipeline_to_postgres"]
           },
           {
             "group": "Tips & Tricks",
-            "pages": [
-              "examples/evm_event_sigs"
-            ]
+            "pages": ["examples/evm_event_sigs"]
           }
         ]
       },
@@ -92,9 +88,7 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": [
-              "networks/overview"
-            ]
+            "pages": ["networks/overview"]
           },
           {
             "group": "Networks",

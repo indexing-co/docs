@@ -48,6 +48,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "includeTimestamps",
+            "in": "query",
+            "description": "Optionally include a timestamp for when the filter was added. NOTE: this will change the output format as well",
+            "example": "true",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -664,6 +673,400 @@
           },
           "400": {
             "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipelines/{name}": {
+      "get": {
+        "description": "Returns a specific pipeline",
+        "responses": {
+          "200": {
+            "description": "A pipeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "transformation",
+                    "filter",
+                    "filterKeys",
+                    "networks",
+                    "delivery"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "transformation": {
+                      "type": "string"
+                    },
+                    "filter": {
+                      "type": "string"
+                    },
+                    "filterKeys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "networks": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "delivery": {
+                      "type": "object",
+                      "properties": {
+                        "adapter": {
+                          "type": "string"
+                        },
+                        "connection": {
+                          "type": "string"
+                        },
+                        "connectionUri": {
+                          "type": "string"
+                        },
+                        "table": {
+                          "type": "string"
+                        },
+                        "uniqueKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Disables a specific pipeline",
+        "responses": {
+          "200": {
+            "description": "A disabled pipeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "transformation",
+                    "filter",
+                    "filterKeys",
+                    "networks",
+                    "delivery"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "transformation": {
+                      "type": "string"
+                    },
+                    "filter": {
+                      "type": "string"
+                    },
+                    "filterKeys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "networks": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "delivery": {
+                      "type": "object",
+                      "properties": {
+                        "adapter": {
+                          "type": "string"
+                        },
+                        "connection": {
+                          "type": "string"
+                        },
+                        "connectionUri": {
+                          "type": "string"
+                        },
+                        "table": {
+                          "type": "string"
+                        },
+                        "uniqueKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipelines/{name}/networks": {
+      "post": {
+        "description": "Enable more networks for a pipeline",
+        "requestBody": {
+          "description": "Networks to add",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "networks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A pipeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "transformation",
+                    "filter",
+                    "filterKeys",
+                    "networks",
+                    "delivery"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "transformation": {
+                      "type": "string"
+                    },
+                    "filter": {
+                      "type": "string"
+                    },
+                    "filterKeys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "networks": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "delivery": {
+                      "type": "object",
+                      "properties": {
+                        "adapter": {
+                          "type": "string"
+                        },
+                        "connection": {
+                          "type": "string"
+                        },
+                        "connectionUri": {
+                          "type": "string"
+                        },
+                        "table": {
+                          "type": "string"
+                        },
+                        "uniqueKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Disables networks for a pipeline",
+        "requestBody": {
+          "description": "Networks to remove",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "networks": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "A disabled pipeline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "transformation",
+                    "filter",
+                    "filterKeys",
+                    "networks",
+                    "delivery"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "transformation": {
+                      "type": "string"
+                    },
+                    "filter": {
+                      "type": "string"
+                    },
+                    "filterKeys": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "networks": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "delivery": {
+                      "type": "object",
+                      "properties": {
+                        "adapter": {
+                          "type": "string"
+                        },
+                        "connection": {
+                          "type": "string"
+                        },
+                        "connectionUri": {
+                          "type": "string"
+                        },
+                        "table": {
+                          "type": "string"
+                        },
+                        "uniqueKeys": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
             "content": {
               "application/json": {
                 "schema": {

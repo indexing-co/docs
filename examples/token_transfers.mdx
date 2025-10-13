@@ -10,7 +10,7 @@ Here's how simple it is to get all token transfers:
 
 ```javascript
 function tokenTransfers(block) {
-  return templates.token_transfers(block);
+  return templates.tokenTransfers(block);
 }
 ```
 
@@ -39,7 +39,7 @@ curl "https://app.indexing.co/dw/transformations/test?network=polygon&beat=74046
   -H 'X-API-KEY: <API_KEY>' \
   -H 'Content-Type: application/json' \
   -d '{
-    "code": "function(block) { return templates.token_transfers(block); }"
+    "code": "function(block) { return templates.tokenTransfers(block); }"
   }' | jq
 ```
 
@@ -52,7 +52,7 @@ For instance, this is how you could fetch only NFT transfers:
 ```javascript
 function tokenTransfers(block) {
   return templates
-    .token_transfers(block)
+    .tokenTransfers(block)
     .filter(txfer => txfer.tokenType === 'NFT');
 }
 ```

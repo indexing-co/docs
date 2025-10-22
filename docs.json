@@ -15,7 +15,11 @@
         "groups": [
           {
             "group": "Introduction",
-            "pages": ["guide/overview", "guide/architecture", "guide/quality"]
+            "pages": [
+              "guide/overview",
+              "guide/architecture",
+              "guide/quality"
+            ]
           },
           {
             "group": "Defining Filters",
@@ -75,11 +79,15 @@
           },
           {
             "group": "Data Delivery",
-            "pages": ["examples/pipeline_to_postgres"]
+            "pages": [
+              "examples/pipeline_to_postgres"
+            ]
           },
           {
             "group": "Tips & Tricks",
-            "pages": ["examples/evm_event_sigs"]
+            "pages": [
+              "examples/evm_event_sigs"
+            ]
           }
         ]
       },
@@ -88,7 +96,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": ["networks/overview"]
+            "pages": [
+              "networks/overview"
+            ]
           },
           {
             "group": "Networks",
@@ -166,7 +176,6 @@
               "networks/monad_testnet",
               "networks/moonbeam",
               "networks/moonriver",
-              "networks/movement_bardock",
               "networks/neon",
               "networks/oasis_emerald",
               "networks/oasis_sapphire",
@@ -176,13 +185,13 @@
               "networks/orderly",
               "networks/orderly_sepolia",
               "networks/peaq",
+              "networks/pharos_atlantic",
               "networks/plasma",
               "networks/plume",
               "networks/plume_testnet",
               "networks/polkadot",
               "networks/polygon",
               "networks/polygon_amoy",
-              "networks/polygon_zkevm",
               "networks/provenance",
               "networks/quai",
               "networks/redbelly",
@@ -211,9 +220,9 @@
               "networks/tron",
               "networks/unichain",
               "networks/unichain_sepolia",
-              "networks/uomi_testnet",
               "networks/xpla",
               "networks/xpla_testnet",
+              "networks/zcash",
               "networks/zer0",
               "networks/zetachain",
               "networks/zk_link",

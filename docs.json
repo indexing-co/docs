@@ -220,6 +220,7 @@
               "networks/tron",
               "networks/unichain",
               "networks/unichain_sepolia",
+              "networks/uomi_testnet",
               "networks/xpla",
               "networks/xpla_testnet",
               "networks/zcash",

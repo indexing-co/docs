@@ -6,9 +6,9 @@ openapi: POST /pipelines
 
 # Destinations
 
-There are currently two flavors of destinations available via self-service APIs: Webhooks and Postgres.
+There are currently three flavors of destinations available via self-service APIs: Webhooks, WebSockets, and Postgres.
 
-There are [15 total that are currently supported by Indexing Co](https://indexing-co.notion.site/16e25f031053805da10cf65179f977c6?v=097aa09c71c845db9f88d773385d1f5e) generally though - reach out if you need something else!
+There are [16 total that are currently supported by Indexing Co](https://indexing-co.notion.site/16e25f031053805da10cf65179f977c6?v=097aa09c71c845db9f88d773385d1f5e) generally though - reach out if you need something else!
 
 ## Webhooks
 
@@ -22,7 +22,27 @@ Here's an example payload for creating a pipeline that delivers to a webhook:
     "connection": {
       "host": "https://webhook.site/...",
       "headers": {
-        "some-auth-key":"some-auth-key"
+        "some-auth-key": "some-auth-key"
+      }
+    }
+  },
+  ...
+}
+```
+
+## WebSockets
+
+Here's an example payload for creating a pipeline that delivers to a websocket:
+
+```json
+{
+  ...
+  "delivery": {
+    "adapter": "WEBSOCKET",
+    "connection": {
+      "host": "ws://websocket-host.com/...",
+      "headers": {
+        "some-auth-key": "some-auth-key"
       }
     }
   },

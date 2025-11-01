@@ -13,6 +13,8 @@ Pull requests are welcome! We need the community's help for bugs, new templates,
 Here's a list of the available functions as they can be used within transformations:
 
 - `templates.tokenTransfers(block)`: pass in an entire block (EVM or not) and get back all of the token transfers within it
+- `utils.blockToTimestamp(block)`: derive the timestamp from a given block
+- `utils.blockToVM(block)`: helper to determine which VM a given block came from (e.g. EVM, SVM, UTXO)
 - `utils.evmAddressToChecksum(address)`: convert an EVM address to its checksum form
 - `utils.evmChainToId(chain)`: convert an EVM chain name to a `chainId`; try `block._network` to get the current chain name
 - `utils.evmDecodeLog(log, signatures[])`: try decoding an EVM log against a list of event signatures

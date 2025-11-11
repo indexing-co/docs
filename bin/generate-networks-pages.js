@@ -78,6 +78,8 @@ Click here to view the latest status: [${statusLink}](${statusLink})
   }
 
   fs.writeFileSync("docs.json", JSON.stringify(docs, null, 2));
+
+  console.log('Generated pages for', allNetworks.networks.length, 'networks');
 }
 
 run().then(() => process.exit(0));

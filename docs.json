@@ -208,6 +208,7 @@
               "networks/solana_devnet",
               "networks/soneium",
               "networks/sonic",
+              "networks/stable",
               "networks/starknet",
               "networks/stellar",
               "networks/story",

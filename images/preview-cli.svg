@@ -1,99 +1,79 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="620" viewBox="0 0 720 620">
-  <style>
-    .bg { fill: #1a1b26; }
-    .titlebar { fill: #24283b; }
-    .btn-close { fill: #f7768e; }
-    .btn-min { fill: #e0af68; }
-    .btn-max { fill: #9ece6a; }
-    .title { fill: #787c99; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Menlo, monospace; font-size: 12px; }
-    .t { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Menlo, monospace; font-size: 13px; }
-    .dim { fill: #565f89; }
-    .gray { fill: #565f89; }
-    .white { fill: #c0caf5; }
-    .bold-white { fill: #c0caf5; font-weight: bold; }
-    .cyan { fill: #7dcfff; font-weight: bold; }
-    .green { fill: #9ece6a; font-weight: bold; }
-    .yellow { fill: #e0af68; }
-    .blue { fill: #7aa2f7; }
-    .magenta { fill: #bb9af7; }
-    .red { fill: #f7768e; }
-  </style>
-
   <!-- Window chrome -->
-  <rect class="bg" width="720" height="620" rx="10" ry="10"/>
-  <rect class="titlebar" width="720" height="36" rx="10" ry="10"/>
-  <rect class="titlebar" y="26" width="720" height="10"/>
-  <circle class="btn-close" cx="20" cy="18" r="6"/>
-  <circle class="btn-min" cx="40" cy="18" r="6"/>
-  <circle class="btn-max" cx="60" cy="18" r="6"/>
-  <text class="title" x="360" y="22" text-anchor="middle">preview — node dist/cli/preview.js mcp-test-base-usdc</text>
+  <rect fill="#1a1b26" width="720" height="620" rx="10" ry="10"/>
+  <rect fill="#24283b" width="720" height="36" rx="10" ry="10"/>
+  <rect fill="#24283b" y="26" width="720" height="10"/>
+  <circle fill="#f7768e" cx="20" cy="18" r="6"/>
+  <circle fill="#e0af68" cx="40" cy="18" r="6"/>
+  <circle fill="#9ece6a" cx="60" cy="18" r="6"/>
+  <text fill="#787c99" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="12" x="360" y="22" text-anchor="middle">preview — node dist/cli/preview.js mcp-test-base-usdc</text>
 
   <!-- Banner box -->
-  <text class="dim t" x="20" y="68">╭──────────────────────────────────────────────────╮</text>
-  <text class="dim t" x="20" y="86">│</text>
-  <text class="cyan t" x="44" y="86">◆ INDEXING.CO</text>
-  <text class="dim t" x="192" y="86">— Live Event Stream</text>
-  <text class="dim t" x="538" y="86">│</text>
-  <text class="dim t" x="20" y="104">│</text>
-  <text class="dim t" x="538" y="104">│</text>
-  <text class="dim t" x="20" y="122">│</text>
-  <text class="dim t" x="44" y="122">Channel:</text>
-  <text class="bold-white t" x="128" y="122">mcp-test-base-usdc</text>
-  <text class="dim t" x="538" y="122">│</text>
-  <text class="dim t" x="20" y="140">╰──────────────────────────────────────────────────╯</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="68">╭──────────────────────────────────────────────────╮</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="86">│</text>
+  <text fill="#7dcfff" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" font-weight="bold" x="44" y="86">◆ INDEXING.CO</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="192" y="86">— Live Event Stream</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="538" y="86">│</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="104">│</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="538" y="104">│</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="122">│</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="44" y="122">Channel:</text>
+  <text fill="#c0caf5" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" font-weight="bold" x="128" y="122">mcp-test-base-usdc</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="538" y="122">│</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="140">╰──────────────────────────────────────────────────╯</text>
 
   <!-- Connected -->
-  <text class="green t" x="32" y="172">●</text>
-  <text class="green t" x="50" y="172">Connected</text>
-  <text class="dim t" x="440" y="172">14:31:55</text>
+  <text fill="#9ece6a" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" font-weight="bold" x="32" y="172">●</text>
+  <text fill="#9ece6a" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" font-weight="bold" x="50" y="172">Connected</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="440" y="172">14:31:55</text>
 
   <!-- Event #1 -->
-  <text class="dim t" x="20" y="206">────</text>
-  <text class="bold-white t" x="68" y="206">#1</text>
-  <text class="dim t" x="92" y="206">──────────────────────────────</text>
-  <text class="dim t" x="404" y="206">14:32:07.123</text>
-  <text class="dim t" x="522" y="206">──</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="206">────</text>
+  <text fill="#c0caf5" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" font-weight="bold" x="68" y="206">#1</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="92" y="206">──────────────────────────────</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="404" y="206">14:32:07.123</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="522" y="206">──</text>
 
-  <text class="dim t" x="32" y="228">chain</text>
-  <text class="white t" x="224" y="228">BASE</text>
-  <text class="dim t" x="32" y="246">block</text>
-  <text class="yellow t" x="224" y="246">28419523</text>
-  <text class="dim t" x="32" y="264">transaction_hash</text>
-  <text class="blue t" x="224" y="264">0x3a9f...c2d1</text>
-  <text class="dim t" x="32" y="282">contract_address</text>
-  <text class="magenta t" x="224" y="282">0x8335...2913</text>
-  <text class="dim t" x="32" y="300">decoded</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="228">chain</text>
+  <text fill="#c0caf5" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="228">BASE</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="246">block</text>
+  <text fill="#e0af68" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="246">28419523</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="264">transaction_hash</text>
+  <text fill="#7aa2f7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="264">0x3a9f...c2d1</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="282">contract_address</text>
+  <text fill="#bb9af7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="282">0x8335...2913</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="300">decoded</text>
 
-  <text class="dim t" x="56" y="318">from</text>
-  <text class="magenta t" x="248" y="318">0x7a25...f091</text>
-  <text class="dim t" x="56" y="336">to</text>
-  <text class="magenta t" x="248" y="336">0xdead...beef</text>
-  <text class="dim t" x="56" y="354">value</text>
-  <text class="yellow t" x="248" y="354">1000000</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="56" y="318">from</text>
+  <text fill="#bb9af7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="248" y="318">0x7a25...f091</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="56" y="336">to</text>
+  <text fill="#bb9af7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="248" y="336">0xdead...beef</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="56" y="354">value</text>
+  <text fill="#e0af68" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="248" y="354">1000000</text>
 
   <!-- Event #2 -->
-  <text class="dim t" x="20" y="384">────</text>
-  <text class="bold-white t" x="68" y="384">#2</text>
-  <text class="dim t" x="92" y="384">──────────────────────────────</text>
-  <text class="dim t" x="404" y="384">14:32:08.456</text>
-  <text class="dim t" x="522" y="384">──</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="20" y="384">────</text>
+  <text fill="#c0caf5" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" font-weight="bold" x="68" y="384">#2</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="92" y="384">──────────────────────────────</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="404" y="384">14:32:08.456</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="522" y="384">──</text>
 
-  <text class="dim t" x="32" y="406">chain</text>
-  <text class="white t" x="224" y="406">BASE</text>
-  <text class="dim t" x="32" y="424">block</text>
-  <text class="yellow t" x="224" y="424">28419524</text>
-  <text class="dim t" x="32" y="442">transaction_hash</text>
-  <text class="blue t" x="224" y="442">0x4531...3e7e</text>
-  <text class="dim t" x="32" y="460">contract_address</text>
-  <text class="magenta t" x="224" y="460">0x8335...2913</text>
-  <text class="dim t" x="32" y="478">decoded</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="406">chain</text>
+  <text fill="#c0caf5" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="406">BASE</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="424">block</text>
+  <text fill="#e0af68" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="424">28419524</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="442">transaction_hash</text>
+  <text fill="#7aa2f7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="442">0x4531...3e7e</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="460">contract_address</text>
+  <text fill="#bb9af7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="224" y="460">0x8335...2913</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="32" y="478">decoded</text>
 
-  <text class="dim t" x="56" y="496">from</text>
-  <text class="magenta t" x="248" y="496">0xa66b...17F4</text>
-  <text class="dim t" x="56" y="514">to</text>
-  <text class="magenta t" x="248" y="514">0x3C83...6d5b</text>
-  <text class="dim t" x="56" y="532">value</text>
-  <text class="yellow t" x="248" y="532">198195873</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="56" y="496">from</text>
+  <text fill="#bb9af7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="248" y="496">0xa66b...17F4</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="56" y="514">to</text>
+  <text fill="#bb9af7" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="248" y="514">0x3C83...6d5b</text>
+  <text fill="#565f89" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="56" y="532">value</text>
+  <text fill="#e0af68" font-family="'SF Mono','Fira Code','Cascadia Code',Menlo,monospace" font-size="13" x="248" y="532">198195873</text>
 
   <!-- Cursor blink indicator -->
   <rect x="20" y="558" width="8" height="16" rx="1" fill="#c0caf5" opacity="0.7">

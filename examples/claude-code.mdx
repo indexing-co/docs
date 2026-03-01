@@ -1,0 +1,146 @@
+---
+title: Using Pipelines with Claude Code
+description: Build, test, and stream blockchain data pipelines directly from your terminal using Claude Code
+---
+
+# Using Pipelines with Claude Code
+
+You can build and manage Indexing Co pipelines entirely from [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) using our MCP server and skill. This gives you a conversational workflow for creating filters, writing transformations, deploying pipelines, and streaming live events — all without leaving your terminal.
+
+## What You Get
+
+| Component | What it does |
+| --------- | ------------ |
+| **MCP Server** | Connects Claude Code to the Indexing Co API and live event stream via WebSocket |
+| **Skill** | Teaches Claude how to build pipelines — filter/transformation/destination patterns, event signatures, debugging |
+| **Preview CLI** | Streams live pipeline events to your terminal with colorized, formatted output |
+
+## Setup
+
+### 1. Install the MCP Server
+
+```bash
+git clone https://github.com/indexing-co/indexing-co-mcp.git
+cd indexing-co-mcp
+npm install && npm run build
+```
+
+Register it with Claude Code:
+
+```bash
+claude mcp add --scope user indexing-co -- node /path/to/indexing-co-mcp/dist/index.js
+```
+
+### 2. Add Your Credentials
+
+Create `~/.indexing-co/credentials` with your API key and Pusher config for live streaming:
+
+```
+API_KEY=your_api_key
+PUSHER_KEY=your_pusher_key
+PUSHER_CLUSTER=us2
+```
+
+Sign up at [accounts.indexing.co](https://accounts.indexing.co) if you don't have an API key yet.
+
+### 3. Install the Skill
+
+```bash
+claude skill add --scope user https://github.com/indexing-co/indexing-co-pipeline-skill
+```
+
+This teaches Claude the full pipeline workflow — how to create filters, write transformations, choose destinations, and debug delivery issues.
+
+## What You Can Do
+
+Once set up, just describe what you want in natural language:
+
+- *"Index all USDC transfers on Base to my Postgres database"*
+- *"Set up a webhook for Uniswap V3 swaps on Ethereum"*
+- *"Stream Aave supply events on Arbitrum so I can see them live"*
+
+Claude will walk through the full pipeline workflow: create a filter, write and test a transformation, set up the destination, deploy, and verify.
+
+## MCP Server Tools
+
+The MCP server gives Claude direct access to the Indexing Co API:
+
+| Tool | Purpose |
+| ---- | ------- |
+| `list_pipelines` / `get_pipeline` / `create_pipeline` / `delete_pipeline` | Manage pipelines |
+| `backfill` | Backfill historical blocks for a pipeline |
+| `list_filters` / `get_filter` / `create_filter` / `delete_filter_values` | Manage address filters |
+| `list_transformations` / `get_transformation` / `create_transformation` | Manage transformation code |
+| `test_transformation` | Dry-run a transformation against a live block |
+| `subscribe` / `unsubscribe` | Subscribe to live event channels |
+| `get_events` / `query` / `describe_data` | Query stored events with SQL |
+
+## Live Event Preview
+
+For pipelines using the `DIRECT` adapter, you can stream events straight to your terminal with the preview CLI:
+
+```bash
+node /path/to/indexing-co-mcp/dist/cli/preview.js <channel>
+```
+
+This renders a live, colorized stream of events as they flow through your pipeline:
+
+```
+╭──────────────────────────────────────────────────╮
+│  ◆ INDEXING.CO — Live Event Stream               │
+│                                                  │
+│  Channel:  my-usdc-transfers                     │
+╰──────────────────────────────────────────────────╯
+
+  ● Connected                            14:31:55
+
+── #1 ──────────────────────────── 14:32:07.123 ──
+  chain              BASE
+  block              28419523
+  transaction_hash   0x3a9f...c2d1
+  from_address       0x7a25...f091
+  to_address         0xdead...beef
+  value              1000000
+```
+
+Addresses show in magenta, transaction hashes in blue, numbers in yellow, and nested objects are indented with recursive colorization. Press Ctrl+C to see a summary with total event count, duration, and average throughput.
+
+### DIRECT Adapter Setup
+
+To use the preview CLI, configure your pipeline with the `DIRECT` adapter:
+
+```json
+{
+  "adapter": "DIRECT",
+  "connectionUri": "my-channel-name"
+}
+```
+
+The `connectionUri` is the channel name you pass to the preview CLI. Events are only sent when at least one subscriber is connected.
+
+<Note>
+  The DIRECT adapter can run alongside any other adapter. For example, you can stream to both Postgres and the preview CLI simultaneously by creating two pipelines with the same filter and transformation but different delivery configs.
+</Note>
+
+## Example Workflow
+
+Here's what a typical session looks like:
+
+1. **You:** *"I want to track all USDC transfers on Base"*
+2. **Claude:** Creates a filter with the Base USDC contract address
+3. **Claude:** Writes a transformation using `utils.evmDecodeLogWithMetadata` for Transfer events
+4. **Claude:** Tests the transformation against a recent block
+5. **Claude:** Deploys the pipeline with your chosen destination
+6. **Claude:** Backfills a few blocks and verifies data arrives
+7. **You:** *"Stream the events so I can see them"*
+8. **Claude:** Launches the preview CLI and triggers a backfill — live events appear in your terminal
+
+## Resources
+
+| Resource | Link |
+| -------- | ---- |
+| MCP Server repo | [github.com/indexing-co/indexing-co-mcp](https://github.com/indexing-co/indexing-co-mcp) |
+| Skill repo | [github.com/indexing-co/indexing-co-pipeline-skill](https://github.com/indexing-co/indexing-co-pipeline-skill) |
+| Full API docs | [docs.indexing.co](https://docs.indexing.co) |
+| Sign up | [accounts.indexing.co](https://accounts.indexing.co) |
+| Support | [hello@indexing.co](mailto:hello@indexing.co) |

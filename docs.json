@@ -84,6 +84,12 @@
             ]
           },
           {
+            "group": "Integrations",
+            "pages": [
+              "examples/claude-code"
+            ]
+          },
+          {
             "group": "Tips & Tricks",
             "pages": [
               "examples/evm_event_sigs"

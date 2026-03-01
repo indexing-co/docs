@@ -50,7 +50,8 @@
               "guide/pipelines/networks-enable",
               "guide/pipelines/networks-disable",
               "guide/pipelines/list",
-              "guide/pipelines/backfill"
+              "guide/pipelines/backfill",
+              "guide/pipelines/stream"
             ]
           }
         ]

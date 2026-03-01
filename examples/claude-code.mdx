@@ -7,6 +7,8 @@ description: Build, test, and stream blockchain data pipelines directly from you
 
 You can build and manage Indexing Co pipelines entirely from [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) using our MCP server and skill. This gives you a conversational workflow for creating filters, writing transformations, deploying pipelines, and streaming live events — all without leaving your terminal.
 
+<img src="/images/preview-cli.svg" alt="Live Event Stream Preview — colorized terminal output showing USDC transfer events streaming in real-time" />
+
 ## What You Get
 
 | Component | What it does |
@@ -83,27 +85,7 @@ For pipelines using the `DIRECT` adapter, you can stream events straight to your
 node /path/to/indexing-co-mcp/dist/cli/preview.js <channel>
 ```
 
-This renders a live, colorized stream of events as they flow through your pipeline:
-
-```
-╭──────────────────────────────────────────────────╮
-│  ◆ INDEXING.CO — Live Event Stream               │
-│                                                  │
-│  Channel:  my-usdc-transfers                     │
-╰──────────────────────────────────────────────────╯
-
-  ● Connected                            14:31:55
-
-── #1 ──────────────────────────── 14:32:07.123 ──
-  chain              BASE
-  block              28419523
-  transaction_hash   0x3a9f...c2d1
-  from_address       0x7a25...f091
-  to_address         0xdead...beef
-  value              1000000
-```
-
-Addresses show in magenta, transaction hashes in blue, numbers in yellow, and nested objects are indented with recursive colorization. Press Ctrl+C to see a summary with total event count, duration, and average throughput.
+This renders a live, colorized stream of events as they flow through your pipeline — addresses in magenta, transaction hashes in blue, numbers in yellow, and nested objects indented with recursive colorization. Press Ctrl+C to see a summary with total event count, duration, and average throughput.
 
 ### DIRECT Adapter Setup
 

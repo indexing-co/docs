@@ -1,11 +1,11 @@
 ---
-title: Using Pipelines with Claude Code
-description: Build, test, and stream blockchain data pipelines directly from your terminal using Claude Code
+title: Build Pipelines with Your AI Coding Agent
+description: Use the Indexing Co MCP server to build, test, and stream blockchain data pipelines from any MCP-compatible coding agent
 ---
 
-# Using Pipelines with Claude Code
+# Build Pipelines with Your AI Coding Agent
 
-You can build and manage Indexing Co pipelines entirely from [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) using our MCP server and skill. This gives you a conversational workflow for creating filters, writing transformations, deploying pipelines, and streaming live events — all without leaving your terminal.
+The Indexing Co [MCP server](https://github.com/indexing-co/indexing-co-mcp) connects AI coding agents to the Indexing Co API and live event stream. Describe your data needs in natural language, and the agent handles pipeline creation, transformation logic, testing, and deployment — no dashboard or config files required.
 
 <img src="/images/preview-cli.svg" alt="Live Event Stream Preview — colorized terminal output showing USDC transfer events streaming in real-time" />
 
@@ -13,8 +13,8 @@ You can build and manage Indexing Co pipelines entirely from [Claude Code](https
 
 | Component | What it does |
 | --------- | ------------ |
-| **MCP Server** | Connects Claude Code to the Indexing Co API and live event stream via WebSocket |
-| **Skill** | Teaches Claude how to build pipelines — filter/transformation/destination patterns, event signatures, debugging |
+| **MCP Server** | Connects your agent to the Indexing Co API and live event stream via WebSocket |
+| **Skill** | Teaches the agent how to build pipelines — filter/transformation/destination patterns, event signatures, debugging. The MCP server provides the tools; the skill provides the knowledge to use them effectively. |
 | **Preview CLI** | Streams live pipeline events to your terminal with colorized, formatted output |
 
 ## Setup
@@ -27,12 +27,6 @@ cd indexing-co-mcp
 npm install && npm run build
 ```
 
-Register it with Claude Code:
-
-```bash
-claude mcp add --scope user indexing-co -- node /path/to/indexing-co-mcp/dist/index.js
-```
-
 ### 2. Add Your Credentials
 
 Create `~/.indexing-co/credentials` with your API key:
@@ -43,13 +37,37 @@ API_KEY=your_api_key
 
 Sign up at [accounts.indexing.co](https://accounts.indexing.co) if you don't have an API key yet.
 
-### 3. Install the Skill
+### 3. Register with Your Agent
 
-```bash
-claude skill add --scope user https://github.com/indexing-co/indexing-co-pipeline-skill
-```
+<Tabs>
+  <Tab title="Claude Code">
+    ```bash
+    claude mcp add --scope user indexing-co -- node /path/to/indexing-co-mcp/dist/index.js
+    ```
 
-This teaches Claude the full pipeline workflow — how to create filters, write transformations, choose destinations, and debug delivery issues.
+    Install the skill to give Claude pipeline workflow knowledge — how to structure filters, write transformations, pick destinations, and debug delivery:
+
+    ```bash
+    claude skill add --scope user https://github.com/indexing-co/indexing-co-pipeline-skill
+    ```
+  </Tab>
+  <Tab title="Codex CLI">
+    ```bash
+    codex mcp add indexing-co -- node /path/to/indexing-co-mcp/dist/index.js
+    ```
+
+    Codex automatically recognizes MCP tools. For the full pipeline workflow knowledge, install the skill as a custom instruction or system prompt — see the [skill repo](https://github.com/indexing-co/indexing-co-pipeline-skill) for details.
+  </Tab>
+  <Tab title="Other MCP Agents">
+    Point your agent's MCP configuration at the server entry point:
+
+    ```
+    node /path/to/indexing-co-mcp/dist/index.js
+    ```
+
+    Any MCP-compatible agent can connect by registering the server and providing API credentials. Pair it with the [skill](https://github.com/indexing-co/indexing-co-pipeline-skill) (as a system prompt or instruction set) for the best results.
+  </Tab>
+</Tabs>
 
 ## What You Can Do
 
@@ -59,11 +77,11 @@ Once set up, just describe what you want in natural language:
 - *"Set up a webhook for Uniswap V3 swaps on Ethereum"*
 - *"Stream Aave supply events on Arbitrum so I can see them live"*
 
-Claude will walk through the full pipeline workflow: create a filter, write and test a transformation, set up the destination, deploy, and verify.
+The agent will walk through the full pipeline workflow: create a filter, write and test a transformation, set up the destination, deploy, and verify.
 
 ## MCP Server Tools
 
-The MCP server gives Claude direct access to the Indexing Co API:
+The MCP server gives your agent direct access to the Indexing Co API:
 
 | Tool | Purpose |
 | ---- | ------- |
@@ -107,13 +125,17 @@ The `connectionUri` is the channel name you pass to the preview CLI. Events are 
 Here's what a typical session looks like:
 
 1. **You:** *"I want to track all USDC transfers on Base"*
-2. **Claude:** Creates a filter with the Base USDC contract address
-3. **Claude:** Writes a transformation using `utils.evmDecodeLogWithMetadata` for Transfer events
-4. **Claude:** Tests the transformation against a recent block
-5. **Claude:** Deploys the pipeline with your chosen destination
-6. **Claude:** Backfills a few blocks and verifies data arrives
+2. **Agent:** Creates a filter with the Base USDC contract address
+3. **Agent:** Writes a transformation using `utils.evmDecodeLogWithMetadata` for Transfer events
+4. **Agent:** Tests the transformation against a recent block
+5. **Agent:** Deploys the pipeline with your chosen destination
+6. **Agent:** Backfills a few blocks and verifies data arrives
 7. **You:** *"Stream the events so I can see them"*
-8. **Claude:** Launches the preview CLI and triggers a backfill — live events appear in your terminal
+8. **Agent:** Launches the preview CLI and triggers a backfill — live events appear in your terminal
+
+## Security
+
+The MCP server runs locally — API credentials stay on your machine. The agent operates with the same permissions as your API key, so treat your credentials accordingly.
 
 ## Resources
 

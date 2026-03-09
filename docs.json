@@ -87,7 +87,7 @@
           {
             "group": "Integrations",
             "pages": [
-              "examples/claude-code"
+              "examples/mcp-server"
             ]
           },
           {

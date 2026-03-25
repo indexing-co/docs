@@ -868,6 +868,83 @@
         }
       }
     },
+    "/pipelines/{name}/status": {
+      "get": {
+        "description": "Returns health status for a specific pipeline, including beats delivered and errors logged within the given timeframe",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the pipeline",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeframe",
+            "in": "query",
+            "description": "Time window for metrics. Defaults to 24h",
+            "schema": {
+              "type": "string",
+              "enum": ["5m", "1h", "24h"],
+              "default": "24h"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline health status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pipeline": {
+                      "type": "string",
+                      "description": "The pipeline name"
+                    },
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Whether the pipeline is enabled"
+                    },
+                    "timeframe": {
+                      "type": "string",
+                      "description": "The time window used for metrics",
+                      "enum": ["5m", "1h", "24h"]
+                    },
+                    "beatsDelivered": {
+                      "type": "integer",
+                      "description": "Number of beats successfully delivered within the timeframe"
+                    },
+                    "errors": {
+                      "type": "integer",
+                      "description": "Number of errors logged within the timeframe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/pipelines/{name}/networks": {
       "post": {
         "description": "Enable more networks for a pipeline",

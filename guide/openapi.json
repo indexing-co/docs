@@ -1247,6 +1247,66 @@
           }
         }
       }
+    },
+    "/pipelines/{name}/backfill/{wallet}": {
+      "post": {
+        "description": "Backfill a pipeline for a specific wallet address. Queues historical beats that match the wallet across all networks the pipeline subscribes to.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the pipeline",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wallet",
+            "in": "path",
+            "description": "The wallet address to backfill for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backfill queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["message"],
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "queued 142 beats for backfill"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

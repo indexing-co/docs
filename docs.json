@@ -170,6 +170,7 @@
               "networks/litecoin",
               "networks/lyra",
               "networks/mantle",
+              "networks/megaeth",
               "networks/mode",
               "networks/mode_sepolia",
               "networks/monad",

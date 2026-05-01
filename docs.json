@@ -137,6 +137,7 @@
               "networks/commons",
               "networks/core",
               "networks/cosmos",
+              "networks/cronos",
               "networks/cyber",
               "networks/degen",
               "networks/dogecoin",

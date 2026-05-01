@@ -117,6 +117,7 @@
               "networks/acala",
               "networks/aptos",
               "networks/arbitrum",
+              "networks/arbitrum_sepolia",
               "networks/astar",
               "networks/aurora",
               "networks/avalanche",

@@ -39,8 +39,6 @@ description: '${allNetworks.networks.length} supported networks and counting'
 
 Indexing Co supports ${allNetworks.networks.length} networks. _All_ of these are available for real time processing in The Neighborhood.
 
-While the vast majority of these networks are blockchains themselves, we can also support offchain sources such as Farcaster.
-
 The most up to date list can be viewed via an API [here](https://jiti.indexing.co/networks)
 
 <Note>

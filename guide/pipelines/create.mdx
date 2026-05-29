@@ -30,6 +30,60 @@ Here's an example payload for creating a pipeline that delivers to a webhook:
 }
 ```
 
+### Signing deliveries (HMAC)
+
+For sensitive payloads you can have each delivery signed so your endpoint can verify it came from us, was not modified in transit, and is not a replay. Add a `signing` block to the webhook `connection`:
+
+```json
+{
+  ...
+  "delivery": {
+    "adapter": "HTTP",
+    "connection": {
+      "host": "https://your-app.com/webhooks/indexing",
+      "headers": {
+        "some-auth-key": "some-auth-key"
+      },
+      "signing": {
+        "secret": "whsec_your_shared_secret",
+        "header": "X-Indexing-Signature",
+        "tsHeader": "X-Indexing-Timestamp"
+      }
+    }
+  },
+  ...
+}
+```
+
+`header` and `tsHeader` are optional and default to `X-Indexing-Signature` and `X-Indexing-Timestamp`. Each delivery then carries:
+
+| Header                 | Value                                                                       |
+| ---------------------- | --------------------------------------------------------------------------- |
+| `X-Indexing-Timestamp` | Unix time in seconds when the request was signed                            |
+| `X-Indexing-Signature` | `sha256=<hex>`, where `<hex> = HMAC_SHA256(secret, "<timestamp>.<body>")`   |
+
+To verify, recompute the HMAC over `"<timestamp>.<rawBody>"` and compare it to `X-Indexing-Signature` in constant time:
+
+```js
+const crypto = require('crypto');
+
+function verify(req, secret) {
+  const ts = req.header('X-Indexing-Timestamp');
+  const sig = req.header('X-Indexing-Signature'); // "sha256=<hex>"
+  if (!ts || !sig) return false;
+  if (Math.abs(Date.now() / 1000 - Number(ts)) > 300) return false; // reject replays
+
+  const expected = 'sha256=' + crypto.createHmac('sha256', secret).update(`${ts}.${req.rawBody}`).digest('hex');
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+```
+
+<Note>
+  Verify against the **raw request body bytes**, not a re-serialized JSON object — whitespace or key-ordering differences will break the comparison. In Express, capture the raw body with `express.json({ verify: (req, _res, buf) => { req.rawBody = buf.toString('utf8'); } })`.
+</Note>
+
 ## WebSockets
 
 Here's an example payload for creating a pipeline that delivers to a websocket:

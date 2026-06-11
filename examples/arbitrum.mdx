@@ -18,19 +18,18 @@ You'll need:
 
 ## Start From a Template
 
-The fastest way to work with Arbitrum data is to start from a template in the [Console](https://console.indexing.co). Each one ships with a transformation and a deployment config, runs on Arbitrum out of the box, and can be customized before you deploy. The same templates are usable against the raw API.
+The fastest way to work with Arbitrum data is to start from one of the Arbitrum templates in the [Console](https://console.indexing.co). Each one ships with a transformation and a deployment config, runs on Arbitrum out of the box, and can be customized before you deploy. The same templates are usable against the raw API.
 
-| Template | What it captures |
-|----------|------------------|
-| ERC-20 Token Transfers | All ERC-20 token transfers for specific wallets or contracts |
-| Uniswap V3 Swaps | Swap events on Uniswap V3 pools (and Uniswap forks) |
-| NFT Transfers (ERC-721) | ERC-721 NFT transfers across collections |
-| Aave V3 Events | Supply, borrow, repay, and liquidation events on Aave V3 |
-| Stablecoin Payment Tracking | USDC, USDT, DAI and other stablecoin transfers. Ideal for payments, treasury, and settlement flows |
-| Full Block Feed | Complete block data, including all transactions |
-| Custom Contract Events | Specific events from any smart contract via a custom ABI |
+| Template | What it captures | Delivery |
+|----------|------------------|----------|
+| Arbitrum DEX Swaps | Swap events on Uniswap V3 and Camelot/Algebra pools on Arbitrum | Postgres |
+| Arbitrum Lending Events | Aave-compatible (Aave V3 and Radiant) lending events on Arbitrum | Postgres |
+| Arbitrum Bridge Flows | Stargate V1 pool swaps and native Arbitrum ETH withdrawals | Postgres |
+| Arbitrum USDC / USDT Payments | USDC and USDT transfer payments for settlement, checkout, and treasury flows | Postgres |
+| Large Transfer Alerts | Webhook alerts when Arbitrum USDC or USDT transfers cross an amount threshold | Webhook |
+| Large Bridge Value Alerts | Webhook alerts when Arbitrum bridge flows exceed 10k USDC/USDT or 5 ETH | Webhook |
 
-Every template above supports Arbitrum. Pick one, set `arbitrum` as the network, and deploy.
+Pick one in the [Console](https://console.indexing.co), adjust any configuration items, and deploy.
 
 ## Deploy via the Raw API
 

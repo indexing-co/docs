@@ -1,0 +1,123 @@
+---
+title: Work with Arbitrum data
+---
+
+## Introduction
+
+Arbitrum is available on The Neighborhood and indexed in real time, delivered to you. This guide shows you how to stream Arbitrum data into your own database or webhook using the same raw API that powers every pipeline, and how to skip straight to a working setup with the ready-made templates in the [Console](https://console.indexing.co).
+
+The network key is `ARBITRUM`. You can preview the raw data at any time here: [jiti.indexing.co/networks/ARBITRUM/latest](https://jiti.indexing.co/networks/ARBITRUM/latest). See the [Arbitrum network page](/networks/arbitrum) for status.
+
+## Prerequisites
+
+You'll need:
+
+- A Neighborhood API key. To get access, sign up at [**accounts.indexing.co**](https://accounts.indexing.co) or email [**hello@indexing.co**](mailto:hello@indexing.co)
+- curl or Postman, or the [Console](https://console.indexing.co)
+- A destination: an active Postgres database, a webhook (grab a temporary one at [webhook.site](https://webhook.site/)), or Kafka
+
+## Start From a Template
+
+The fastest way to work with Arbitrum data is to start from a template in the [Console](https://console.indexing.co). Each one ships with a transformation and a deployment config, runs on Arbitrum out of the box, and can be customized before you deploy. The same templates are usable against the raw API.
+
+| Template | What it captures |
+|----------|------------------|
+| ERC-20 Token Transfers | All ERC-20 token transfers for specific wallets or contracts |
+| Uniswap V3 Swaps | Swap events on Uniswap V3 pools (and Uniswap forks) |
+| NFT Transfers (ERC-721) | ERC-721 NFT transfers across collections |
+| Aave V3 Events | Supply, borrow, repay, and liquidation events on Aave V3 |
+| Stablecoin Payment Tracking | USDC, USDT, DAI and other stablecoin transfers. Ideal for payments, treasury, and settlement flows |
+| Full Block Feed | Complete block data, including all transactions |
+| Custom Contract Events | Specific events from any smart contract via a custom ABI |
+
+Every template above supports Arbitrum. Pick one, set `arbitrum` as the network, and deploy.
+
+## Deploy via the Raw API
+
+If you'd rather drive it from the command line, the flow is the same as any other EVM network. Just target `arbitrum`.
+
+### Step 1: Create a transformation
+
+Here's a transformation that decodes ERC-20 transfers from an Arbitrum block. Save it as `transfers.js`:
+
+```javascript
+function blockTransfers(block) {
+  const transfers = [];
+
+  for (const tx of block.transactions || []) {
+    for (const log of tx.receipt?.logs || []) {
+      const decoded = utils.evmDecodeLogWithMetadata(log, [
+        'event Transfer(address indexed from, address indexed to, uint256 value)',
+      ]);
+
+      if (decoded) {
+        transfers.push({
+          chain: block._network,
+          transaction_hash: tx.hash,
+          log_index: log.logIndex,
+          contract_address: log.address?.toLowerCase(),
+          decoded: decoded.decoded,
+        });
+      }
+    }
+  }
+
+  return transfers;
+}
+```
+
+Test it against a real Arbitrum block with the [test](/guide/transformations/test) endpoint:
+
+```bash
+curl "https://app.indexing.co/dw/transformations/test?network=arbitrum&beat=latest" \
+  -H "X-API-KEY: <your-api-key>" \
+  -F code=@./transfers.js \
+  | jq
+```
+
+Once you're happy with the output, commit it with the [create](/guide/transformations/create) endpoint:
+
+```bash
+curl "https://app.indexing.co/dw/transformations/arbitrum_transfers" \
+  -H "X-API-KEY: <your-api-key>" \
+  -d code=@./transfers.js \
+  | jq
+```
+
+### Step 2: Deploy the pipeline
+
+[Create](/guide/pipelines/create) the pipeline targeting `arbitrum`:
+
+```bash
+curl https://app.indexing.co/dw/pipelines \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: <your-api-key>" \
+  -d '{
+    "name": "arbitrum_transfers",
+    "transformation": "arbitrum_transfers",
+    "networks": ["arbitrum"],
+    "delivery": {
+      "adapter": "HTTP",
+      "connection": {
+        "host": "<WEBHOOK ENDPOINT>"
+      }
+    }
+  }' \
+  | jq
+```
+
+<Note>
+  Arbitrum is just one network. Add any of the supported [networks](/networks) to the same pipeline during creation. The more the merrier!
+</Note>
+
+It should only take a few seconds to begin seeing data flow. Once you're done experimenting, disable the pipeline with `enabled: false`.
+
+## Wrap-Up
+
+You've now set up a real-time stream of Arbitrum data using The Neighborhood, either from a Console template or directly through the raw API. The same templates and endpoints work across every supported network, so you can extend this pipeline to Base, Optimism, Polygon, and more with a one-line change.
+
+Need help or want to go further?
+
+- Start from a template in the [Console](https://console.indexing.co)
+- Reach out at [indexing.co/contact](https://www.indexing.co/contact)
+- Or email us at [hello@indexing.co](mailto:hello@indexing.co)

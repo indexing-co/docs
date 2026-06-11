@@ -17,6 +17,7 @@
             "group": "Introduction",
             "pages": [
               "guide/overview",
+              "guide/console",
               "guide/architecture",
               "guide/quality"
             ]
@@ -72,6 +73,7 @@
           {
             "group": "EVM",
             "pages": [
+              "examples/arbitrum",
               "examples/uniswap",
               "examples/clanker_deployments",
               "examples/polygon_dex_events",

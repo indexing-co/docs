@@ -53,7 +53,6 @@
               "guide/pipelines/list",
               "guide/pipelines/status",
               "guide/pipelines/backfill",
-              "guide/pipelines/backfill-wallet",
               "guide/pipelines/stream"
             ]
           }

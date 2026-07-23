@@ -1247,6 +1247,74 @@
           }
         }
       }
+    },
+    "/pipelines/{name}/backfill/{wallet}": {
+      "post": {
+        "description": "Backfill a pipeline for a specific wallet address. Discovers the wallet's historical activity from our own appearance index (all-address log appearances plus native/internal transfers) and queues the matching historical beats on every backfill-ready network the pipeline subscribes to — EVM wallets (0x…) fan out over the pipeline's EVM networks, Solana wallets over Solana. Per-network availability is gated server-side: networks join the fan-out as their historical index goes live. The response lists exactly which networks were queued.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "The name of the pipeline",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wallet",
+            "in": "path",
+            "description": "The wallet address to backfill for (0x… for EVM, base58 for Solana)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Backfill queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["message", "chains"],
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "queued 2 chain(s) for backfill"
+                    },
+                    "chains": {
+                      "type": "array",
+                      "description": "The networks actually queued (the pipeline's networks filtered to backfill-ready ones)",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["ethereum", "base"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": ["error"],
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

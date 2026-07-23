@@ -1271,6 +1271,41 @@
             }
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "chains": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Restrict the fan-out to these networks (subset of the pipeline's backfill-ready chains)",
+                    "example": ["base"]
+                  },
+                  "fromBlock": {
+                    "type": "integer",
+                    "description": "Lower block bound, applied as-given to every selected chain — pair with a single-chain `chains` filter since block numbers differ per chain. Takes precedence over time bounds."
+                  },
+                  "toBlock": {
+                    "type": "integer",
+                    "description": "Upper block bound (same caveat as fromBlock)."
+                  },
+                  "fromTime": {
+                    "type": "string",
+                    "description": "Lower time bound (ISO-8601 or epoch-ms), converted to a block bound per chain from its observed block time. Approximate by design — 'the last month', not a block-exact cut.",
+                    "example": "2026-06-23T00:00:00Z"
+                  },
+                  "toTime": {
+                    "type": "string",
+                    "description": "Upper time bound (same conversion as fromTime)."
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Backfill queued",

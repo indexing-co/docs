@@ -170,18 +170,14 @@
               "networks/linea",
               "networks/linea_sepolia",
               "networks/litecoin",
-              "networks/lyra",
               "networks/mantle",
               "networks/megaeth",
               "networks/mode",
-              "networks/mode_sepolia",
               "networks/monad",
               "networks/oasis_sapphire",
               "networks/oasys",
               "networks/op_sepolia",
               "networks/optimism",
-              "networks/orderly",
-              "networks/orderly_sepolia",
               "networks/plasma",
               "networks/plume",
               "networks/polkadot",
@@ -216,8 +212,7 @@
               "networks/xpla_testnet",
               "networks/zcash",
               "networks/zksync",
-              "networks/zora",
-              "networks/zora_sepolia"
+              "networks/zora"
             ]
           }
         ]

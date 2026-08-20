@@ -204,6 +204,7 @@
               "networks/tempo",
               "networks/terra",
               "networks/terra_classic",
+              "networks/thorchain",
               "networks/ton",
               "networks/tron",
               "networks/unichain",

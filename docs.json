@@ -120,6 +120,7 @@
               "networks/aptos",
               "networks/arbitrum",
               "networks/arbitrum_sepolia",
+              "networks/arc",
               "networks/astar",
               "networks/aurora",
               "networks/avalanche",

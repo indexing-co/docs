@@ -241,5 +241,219 @@
       "x": "https://x.com/indexingco",
       "linkedin": "https://linkedin.com/company/indexing-co"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/networks/apechain",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/arbitrum_nova",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/bitcoin_l1_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/bitcoin_mempool",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/bsc_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/canto",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/cast_protocol",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/cx_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/dydx",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/eth_holesky",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/ethereum_pow",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/farcaster",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/flow",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/fuel",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/fuse",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/ham",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/hychain",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/immutable",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/injective_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/karura",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/karura_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/lyra",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/megaeth_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/metis",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/mode_sepolia",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/monad_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/moonbeam",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/moonriver",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/movement_bardock",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/neon",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/oasis_emerald",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/orderly",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/orderly_sepolia",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/peaq",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/pharos_atlantic",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/plume_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/polygon_amoy",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/polygon_zkevm",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/rise_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/sanko",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/sei",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/stack",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/syndicate_frame_chain",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/taiko",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/tezos",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/treasure",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/unichain_sepolia",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/uomi_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/xai",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/zer0",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/zetachain",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/zk_link",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/zora_sepolia",
+      "destination": "/networks/overview"
+    }
+  ]
 }

@@ -27,6 +27,32 @@ async function run() {
   };
 
   docs.navigation.tabs.push(networksTab);
+
+  // Pages for networks that were dropped redirect to the overview, so links and search results don't 404.
+  const previousKeys = fs
+    .readdirSync("networks")
+    .filter((f) => f.endsWith(".mdx"))
+    .map((f) => f.slice(0, -".mdx".length));
+  const currentKeys = new Set(
+    allNetworks.networks.map((n) => n.key.toLowerCase()),
+  );
+  const redirectSources = new Set(
+    (docs.redirects || []).map((r) => r.source),
+  );
+  for (const key of previousKeys) {
+    if (key !== "overview" && !currentKeys.has(key)) {
+      redirectSources.add(`/networks/${key}`);
+    }
+  }
+  // A network that comes back gets its page back.
+  for (const key of currentKeys) {
+    redirectSources.delete(`/networks/${key}`);
+  }
+  docs.redirects = [...redirectSources].sort().map((source) => ({
+    source,
+    destination: "/networks/overview",
+  }));
+
   fs.rmdirSync("networks", { recursive: true });
   fs.mkdirSync("networks", { recursive: true });
 

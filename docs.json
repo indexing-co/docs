@@ -187,6 +187,7 @@
               "networks/quai",
               "networks/redbelly",
               "networks/ripple",
+              "networks/robinhood",
               "networks/ronin",
               "networks/scroll",
               "networks/scroll_sepolia",

@@ -126,7 +126,6 @@
               "networks/avalanche",
               "networks/avalanche_fuji",
               "networks/base",
-              "networks/base_sepolia",
               "networks/berachain",
               "networks/bitcoin",
               "networks/bittensor",
@@ -137,12 +136,10 @@
               "networks/celo",
               "networks/chiliz",
               "networks/chiliz_spicy",
-              "networks/commons",
               "networks/core",
               "networks/cosmos",
               "networks/cronos",
               "networks/cyber",
-              "networks/degen",
               "networks/dogecoin",
               "networks/eclipse",
               "networks/enjin",
@@ -152,17 +149,15 @@
               "networks/eth_hoodi",
               "networks/eth_sepolia",
               "networks/fantom",
-              "networks/fantom_testnet",
               "networks/filecoin",
               "networks/filecoin_evm",
               "networks/fogo",
               "networks/fraxtal",
               "networks/gnosis",
-              "networks/hashfire",
               "networks/hedera",
+              "networks/hedera_native",
               "networks/hemi",
               "networks/hemi_testnet",
-              "networks/hyper_core",
               "networks/hyper_evm",
               "networks/injective",
               "networks/ink",
@@ -177,8 +172,8 @@
               "networks/monad",
               "networks/oasis_sapphire",
               "networks/oasys",
-              "networks/op_sepolia",
               "networks/optimism",
+              "networks/op_sepolia",
               "networks/plasma",
               "networks/plume",
               "networks/polkadot",
@@ -188,14 +183,11 @@
               "networks/redbelly",
               "networks/ripple",
               "networks/robinhood",
-              "networks/ronin",
               "networks/scroll",
-              "networks/scroll_sepolia",
               "networks/sei_evm",
               "networks/shape",
               "networks/skale_base_sepolia",
               "networks/solana",
-              "networks/solana_devnet",
               "networks/soneium",
               "networks/sonic",
               "networks/stable",
@@ -253,6 +245,10 @@
       "destination": "/networks/overview"
     },
     {
+      "source": "/networks/base_sepolia",
+      "destination": "/networks/overview"
+    },
+    {
       "source": "/networks/bitcoin_l1_testnet",
       "destination": "/networks/overview"
     },
@@ -273,7 +269,15 @@
       "destination": "/networks/overview"
     },
     {
+      "source": "/networks/commons",
+      "destination": "/networks/overview"
+    },
+    {
       "source": "/networks/cx_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/degen",
       "destination": "/networks/overview"
     },
     {
@@ -286,6 +290,10 @@
     },
     {
       "source": "/networks/ethereum_pow",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/fantom_testnet",
       "destination": "/networks/overview"
     },
     {
@@ -309,7 +317,15 @@
       "destination": "/networks/overview"
     },
     {
+      "source": "/networks/hashfire",
+      "destination": "/networks/overview"
+    },
+    {
       "source": "/networks/hychain",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/hyper_core",
       "destination": "/networks/overview"
     },
     {
@@ -401,11 +417,23 @@
       "destination": "/networks/overview"
     },
     {
+      "source": "/networks/ronin",
+      "destination": "/networks/overview"
+    },
+    {
       "source": "/networks/sanko",
       "destination": "/networks/overview"
     },
     {
+      "source": "/networks/scroll_sepolia",
+      "destination": "/networks/overview"
+    },
+    {
       "source": "/networks/sei",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/solana_devnet",
       "destination": "/networks/overview"
     },
     {

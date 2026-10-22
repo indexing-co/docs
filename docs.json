@@ -183,6 +183,7 @@
               "networks/redbelly",
               "networks/ripple",
               "networks/robinhood",
+              "networks/robinhood_testnet",
               "networks/scroll",
               "networks/sei_evm",
               "networks/shape",

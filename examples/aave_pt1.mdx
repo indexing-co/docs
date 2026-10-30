@@ -2,7 +2,7 @@
 title: Data from Chain to Database (Aave Example) — Part 1
 ---
 
-In this two-part guide, we’ll walk through how to build an onchain data indexing pipeline from scratch using The Indexing Company’s infrastructure. By the end of this series, you’ll have a live pipeline deployed in **The Neighborhood**, the distributed data network built by The Indexing Company, and streaming onchain events from the Aave protocol into your own database or webhook.
+In this two-part guide, we’ll walk through how to build an onchain data indexing pipeline from scratch using Indexing Co's infrastructure. By the end of this series, you’ll have a live pipeline deployed on **Indexing Co**, the distributed data network and streaming onchain events from the Aave protocol into your own database or webhook.
 
 We'll also provide a [**Postman collection**](https://github.com/indexing-co/docs/blob/main/examples/Aave_Pipeline_to_Database_Example.postman_collection.json) so you can follow along step-by-step. For each command in this guide, we'll reference its name as found in the Postman collection.
 
@@ -25,7 +25,7 @@ For this tutorial, we’ll be indexing events from the **Aave Pool contract**, w
 - [Aave Pool contract ABI](https://aave.com/docs/developers/smart-contracts/pool)
 - [Etherscan link](https://etherscan.io/address/0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2)
 
-You can extract event signatures from either the ABI or directly from Etherscan. We recommend verifying or formatting them with an LLM to ensure they match the expected Solidity format used by The Indexing Company. [Follow this Event Extraction Example for tips](/examples/evm_event_sigs).
+You can extract event signatures from either the ABI or directly from Etherscan. We recommend verifying or formatting them with an LLM to ensure they match the expected Solidity format used by Indexing Co. [Follow this Event Extraction Example for tips](/examples/evm_event_sigs).
 
 ---
 
@@ -77,7 +77,7 @@ curl --location --request DELETE 'https://app.indexing.co/dw/filters/aave_exampl
 
 **JavaScript Filename**: `AavePool.js`
 
-Now that the contract filter is set up, it’s time to define the logic to extract relevant onchain events. The Indexing Company supports transformation functions written in JavaScript, which operate on each block. We will decode logs and format events for downstream use. For an instruction to find and transform these events visit our (Event Extraction Example)[/examples/evm_event_sigs].
+Now that the contract filter is set up, it’s time to define the logic to extract relevant onchain events. Indexing Co supports transformation functions written in JavaScript, which operate on each block. We will decode logs and format events for downstream use. For an instruction to find and transform these events visit our (Event Extraction Example)[/examples/evm_event_sigs].
 
 Below is the transformation code we’ll use to extract key Aave Pool events:
 
@@ -190,7 +190,7 @@ In Postman:
 - Use the same endpoint URL
 - Under **Body > form-data**, key should be `code`, set type to `Text`, and paste your transformation function OR set type `File` and upload the `AavePool.js` file.
 
-Once registered, your transformation is ready to be used in a full indexing pipeline in **The Neighborhood**.
+Once registered, your transformation is ready to be used in a full indexing pipeline on **Indexing Co**.
 
 ---
 

@@ -4,7 +4,7 @@ title: Streaming ERC-20 Contract Deployments
 
 ## Introduction
 
-This tutorial shows you how to detect and stream **ERC-20 contract deployments** in real time using **The Neighborhood’s indexing infrastructure**. Basically we are going to track new token creations.
+This tutorial shows you how to detect and stream **ERC-20 contract deployments** in real time using **Indexing Co infrastructure**. Basically we are going to track new token creations.
 
 Unlike event-based pipelines, this example scans the entire chain for contract creation transactions and identifies which of these deployments implement the ERC-20 interface.
 
@@ -14,7 +14,7 @@ Unlike event-based pipelines, this example scans the entire chain for contract c
 
 You’ll need:
 
-- A Neighborhood API key. To get access, sign up at [**accounts.indexing.co**](https://accounts.indexing.co) or email [**hello@indexing.co**](mailto:hello@indexing.co)
+- An Indexing Co API key. To get access, sign up at [**accounts.indexing.co**](https://accounts.indexing.co) or email [**hello@indexing.co**](mailto:hello@indexing.co)
 - Basic understanding of EVM transactions and contract bytecode
 - `curl` or Postman
 - A webhook, database endpoint, or another supported delivery method
@@ -75,7 +75,7 @@ You can also download the code [here](https://github.com/indexing-co/docs/blob/m
 
 ## Step 2: Create the Transformation
 
-Use the following API request to [create your transformation](https://docs.indexing.co/guide/transformations/create) in The Neighborhood:
+Use the following API request to [create your transformation](https://docs.indexing.co/guide/transformations/create) on Indexing Co:
 
 ```bash
 curl https://app.indexing.co/dw/transformations/erc20_deployments \
@@ -134,7 +134,7 @@ curl 'https://app.indexing.co/dw/transformations/test?network=base&beat=8925894'
 
 ## Wrap-Up
 
-You’ve now set up a real-time pipeline for detecting ERC-20 contract deployments on **The Neighborhood**.
+You’ve now set up a real-time pipeline for detecting ERC-20 contract deployments on **Indexing Co**.
 
 To go further, **chain this output into a second pipeline** that filters and streams token transfers for these newly deployed tokens.
 

@@ -63,7 +63,7 @@ title: 'The Networks'
 description: '${allNetworks.networks.length} supported networks and counting'
 ---
 
-Indexing Co supports ${allNetworks.networks.length} networks. _All_ of these are available for real time processing in The Neighborhood.
+Indexing Co supports ${allNetworks.networks.length} networks. _All_ of these are available for real time processing.
 
 The most up to date list can be viewed via an API [here](https://jiti.indexing.co/networks)
 

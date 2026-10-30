@@ -19,7 +19,7 @@ Here’s what we’ll cover:
 
 Before deploying the pipeline, you need to define a destination where data will be streamed.
 
-In this guide, we’ll use **PostgreSQL** as our example target. However, The Indexing Company supports many output adapters, organized into categories:
+In this guide, we’ll use **PostgreSQL** as our example target. However, Indexing Co supports many output adapters, organized into categories:
 
 - **Databases & Warehouses** — PostgreSQL (example), MySQL, SQLite, BigQuery, Firestore, MongoDB, Neo4j, Arango
 - **Event Streams & Queues** — Kafka, Kinesis, Pulsar, GCP PubSub
@@ -35,7 +35,7 @@ To follow along with this example:
 
 - Spin up a Postgres instance (local or hosted)
 - Create a table or database for the data
-- Make sure it’s accessible (e.g., by IP allowlisting The Indexing Company)
+- Make sure it’s accessible (e.g., by IP allowlisting Indexing Co)
 
 Next, we’ll define the schema based on the output of your transformation function.
 
@@ -87,7 +87,7 @@ CREATE TABLE AavePool (
 
 This setup avoids using generated IDs for deterministic data — a common trap. Instead, it uses a unique combination of `chain`, `transaction_hash`, and `log_index` as the primary key.
 
-Because The Indexing Company’s pipelines guarantee **at-least-once delivery**, duplicates can occur during retries. The unique key constraint ensures that only one version of each event is stored reliably.
+Because Indexing Co's pipelines guarantee **at-least-once delivery**, duplicates can occur during retries. The unique key constraint ensures that only one version of each event is stored reliably.
 
 Make sure the schema matches the structure and types you expect to receive at scale. Once ready, you're good to move on to deployment.
 
@@ -99,7 +99,7 @@ Make sure the schema matches the structure and types you expect to receive at sc
 
 **Postman Command Name**: `6. Deploy Pipeline`
 
-With the transformation logic, contract filter, and destination schema ready, you can now deploy the full pipeline. This step registers all components together so The Indexing Company can begin streaming data from the blockchain to your destination.
+With the transformation logic, contract filter, and destination schema ready, you can now deploy the full pipeline. This step registers all components together so Indexing Co can begin streaming data from the blockchain to your destination.
 
 You’ll need to provide:
 
@@ -143,7 +143,7 @@ In Postman:
 - Use the URL: `https://app.indexing.co/dw/pipelines/`
 - Go to **Body > raw > JSON** and paste in the payload above
 
-Once submitted, The Neighborhood will begin streaming data for every new block that matches your filter and passes your transformation.
+Once submitted, Indexing Co will begin streaming data for every new block that matches your filter and passes your transformation.
 
 ---
 
@@ -172,7 +172,7 @@ If you don’t see data:
 
 ## That’s a wrap!
 
-You’ve now built and deployed a full onchain data pipeline to **The Neighborhood**, the distributed indexing network by The Indexing Company — from contract filtering to transformation, schema generation, and live delivery.
+You’ve now built and deployed a full onchain data pipeline to **Indexing Co**, the distributed indexing network — from contract filtering to transformation, schema generation, and live delivery.
 
 If you have any questions, need help configuring a destination, or want to request a new adapter:
 

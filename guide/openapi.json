@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "The Neighborhood - OpenAPI",
+    "title": "Indexing Co - OpenAPI",
     "description": "Schema for testing, deploying, and managing distributed pipelines",
     "license": {
       "name": "MIT"

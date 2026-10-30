@@ -1,13 +1,13 @@
 ---
-title: How to Find and Use EVM Event Signatures in The Neighborhood
+title: How to Find and Use EVM Event Signatures on Indexing Co
 ---
 
-If you're building a pipeline in The Neighborhood and using transformation code to decode onchain events, getting the right event signatures is one of the most important steps.
+If you're building a pipeline on Indexing Co and using transformation code to decode onchain events, getting the right event signatures is one of the most important steps.
 
 This tutorial will walk you through:
 
 - How to **find event signatures** from block explorers, source code, and documentation
-- How to **format them correctly** for use in The Neighborhood
+- How to **format them correctly** for use on Indexing Co
 - How to use the **helper functions** in your transformation code
 - Common issues to troubleshoot if events aren't being picked up
 
@@ -17,7 +17,7 @@ Let's start with the basics.
 
 ## How to Find Event Signatures
 
-To decode EVM logs in The Neighborhood, you need the **original Solidity declaration** of each event you care about. Here are three reliable methods to find them:
+To decode EVM logs on Indexing Co, you need the **original Solidity declaration** of each event you care about. Here are three reliable methods to find them:
 
 ---
 
@@ -127,18 +127,18 @@ Reach out to us at [hello@indexing.co](mailto:hello@indexing.co) — we're happy
 
 Event signatures are the blueprint for decoding onchain activity in EVM-based blockchains. Every time a smart contract emits an event, it's logged onchain with a `topic0` — a keccak256 hash of the event's signature (name and argument types). If you want to index, decode, or filter on these logs, you need to provide the exact event signature.
 
-In The Neighborhood, transformation code uses helper functions like `utils.evmDecodeLogWithMetadata()` to decode logs. These functions rely on an array of event signatures written in their **original Solidity declaration format** — no shortened types, renamed parameters, or reordered arguments.
+On Indexing Co, transformation code uses helper functions like `utils.evmDecodeLogWithMetadata()` to decode logs. These functions rely on an array of event signatures written in their **original Solidity declaration format** — no shortened types, renamed parameters, or reordered arguments.
 
 Why this matters:
 
 - `event Borrow(address indexed reserve, address user, uint256 amount)` ≠ `event Borrow(address reserve, address user, uint256 amount)` — `indexed` is part of the signature!
 - `uint256` ≠ `uint8`, and `address[]` ≠ `address` — exact types must match the deployed contract.
 
-Providing a mismatched or standardized version of the signature means The Neighborhood won't be able to match and decode that log, even if the event did fire.
+Providing a mismatched or standardized version of the signature means Indexing Co won't be able to match and decode that log, even if the event did fire.
 
 ## Formatting Signatures with an LLM
 
-Once you've found the event structure, you need to convert it into the exact Solidity format expected by The Neighborhood.
+Once you've found the event structure, you need to convert it into the exact Solidity format expected by Indexing Co.
 
 You can use a large language model (like ChatGPT) to help with this by giving it a structured prompt. Here’s a sample query you can copy-paste:
 
@@ -186,11 +186,11 @@ const decodedWithMetadata = utils.evmDecodeLogWithMetadata(log, [
 
 This method is quick, scalable, and accurate when used carefully — just always double-check the types and match them to verified sources.
 
-## Using Signatures in The Neighborhoods Helper Functions
+## Using Signatures with Indexing Co Helper Functions
 
 Once you've formatted your event signatures correctly, you're ready to use them in your transformation code.
 
-The Neighborhood provides several helper functions that make decoding EVM logs straightforward:
+Indexing Co provides several helper functions that make decoding EVM logs straightforward:
 
 ```
 const decoded = utils.evmDecodeLog(log, [

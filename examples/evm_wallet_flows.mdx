@@ -2,7 +2,7 @@
 title: Track Wallet Flows Across EVM Chains
 ---
 
-In this step-by-step guide, we'll show you how to build a pipeline in **The Neighborhood**, the distributed data network built by The Indexing Company, that monitors wallet flows from 117 known Binance addresses and streams all related token transfers into your own database or webhook.
+In this step-by-step guide, we'll show you how to build a pipeline on **Indexing Co**, our distributed data network, that monitors wallet flows from 117 known Binance addresses and streams all related token transfers into your own database or webhook.
 
 By the end of this tutorial, you’ll be able to:
 
@@ -17,7 +17,7 @@ By the end of this tutorial, you’ll be able to:
 
 This filter targets 117 known Binance wallets. You can replace these addresses with your own list if you want to track different wallets, smart contracts, or entities.
 
-Don’t worry about (your) size! The Neighborhood supports **filters with over millions of addresses easily**.
+Don’t worry about (your) size! Indexing Co supports **filters with over millions of addresses easily**.
 
 ```bash
 curl --location 'https://app.indexing.co/dw/filters/binance_addresses' \
@@ -78,7 +78,7 @@ Prefer a webhook or cloud storage target? Just change the delivery adapter in th
 
 # Step 5: Create the Pipeline
 
-Now deploy the full pipeline into **The Neighborhood** and stream data from any EVM chain in real time.
+Now deploy the full pipeline into **Indexing Co** and stream data from any EVM chain in real time.
 
 ```bash
 curl --location 'https://app.indexing.co/dw/pipelines' \
@@ -143,7 +143,7 @@ The transformation layer is fully programmable and real-time, enabling custom lo
 
 # Recap
 
-You’ve now deployed a live pipeline in **The Neighborhood** that:
+You’ve now deployed a live pipeline on **Indexing Co** that:
 
 - Tracks 117 Binance addresses
 - Can work across **any EVM chain**

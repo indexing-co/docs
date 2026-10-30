@@ -6,15 +6,15 @@ title: Streaming Clanker Token Deployments
 
 Clanker is an AI-powered protocol that allows users to deploy ERC-20 tokens instantly on Base, using Farcaster posts, web interfaces like [clanker.world](https://clanker.world/), or Clanker’s developer API. It automates token creation, liquidity provisioning, and fee sharing.
 
-This tutorial shows you how to **stream Clanker token deployments in real time** using The Neighborhood's indexing infrastructure.
+This tutorial shows you how to **stream Clanker token deployments in real time** using Indexing Co infrastructure.
 
-**Note:** This tutorial uses a transformation written by Indexing Co that returns the **same data the Clanker team receives** from The Neighborhood. It’s based on all known `TokenCreated` events across Clanker deployment contracts.
+**Note:** This tutorial uses a transformation written by Indexing Co that returns the **same data the Clanker team receives** from us. It’s based on all known `TokenCreated` events across Clanker deployment contracts.
 
 ## Prerequisites
 
 You’ll need:
 
-- A Neighborhood API key. To get access, sign up at [**accounts.indexing.co**](https://accounts.indexing.co) or email [**hello@indexing.co**](mailto:hello@indexing.co)
+- An Indexing Co API key. To get access, sign up at [**accounts.indexing.co**](https://accounts.indexing.co) or email [**hello@indexing.co**](mailto:hello@indexing.co)
 - Familiarity with smart contract events
 - curl or Postman
 - A webhook or database endpoint (optional)
@@ -177,7 +177,7 @@ curl --location 'https://app.indexing.co/dw/transformations/test?network=base&be
 
 ## Wrap-Up
 
-You’ve now set up a real-time stream of Clanker token deployments using The Neighborhood. The data you're receiving is identical to what Clanker themselves use in production.
+You’ve now set up a real-time stream of Clanker token deployments using Indexing Co. The data you're receiving is identical to what Clanker themselves use in production.
 
 Need help or want to go further?
 

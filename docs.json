@@ -170,6 +170,7 @@
               "networks/megaeth",
               "networks/mode",
               "networks/monad",
+              "networks/monad_testnet",
               "networks/oasis_sapphire",
               "networks/oasys",
               "networks/optimism",
@@ -206,7 +207,6 @@
               "networks/world",
               "networks/xpla",
               "networks/xpla_testnet",
-              "networks/zcash",
               "networks/zksync",
               "networks/zora"
             ]
@@ -362,10 +362,6 @@
       "destination": "/networks/overview"
     },
     {
-      "source": "/networks/monad_testnet",
-      "destination": "/networks/overview"
-    },
-    {
       "source": "/networks/moonbeam",
       "destination": "/networks/overview"
     },
@@ -467,6 +463,10 @@
     },
     {
       "source": "/networks/xai",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/zcash",
       "destination": "/networks/overview"
     },
     {

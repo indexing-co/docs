@@ -129,7 +129,6 @@
               "networks/berachain",
               "networks/bitcoin",
               "networks/bittensor",
-              "networks/blast",
               "networks/bsc",
               "networks/cardano",
               "networks/celestia",
@@ -251,6 +250,10 @@
     },
     {
       "source": "/networks/bitcoin_l1_testnet",
+      "destination": "/networks/overview"
+    },
+    {
+      "source": "/networks/blast",
       "destination": "/networks/overview"
     },
     {
